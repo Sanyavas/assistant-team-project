@@ -1,6 +1,11 @@
 """CHATBOT"""
 
 
+"""
+Головна функція
+"""
+
+
 def main():
     print("Hello World!")
 
