@@ -1,6 +1,6 @@
 """CHATBOT"""
 
-from addressbook import *
+from addressbook import main as ab_main
 
 """
 Головна функція
@@ -9,8 +9,8 @@ from addressbook import *
 
 def main():
     user_input = input("Main menu. Enter command >>>")
-    if user_input == "addressbook":
-        main_addressbook()
+    if user_input == "ab":
+        ab_main()
     else:
         print(f"I don't understand you!!")
 

@@ -362,7 +362,7 @@ def parser_command(user_input: str):
 """
 
 
-def main_addressbook():
+def main():
     print(start_info())
     ab = open_contacts_from_file()
 
@@ -377,4 +377,7 @@ def main_addressbook():
         else:
             print(command(*data, ab=ab))
 
+
+if __name__ == "__main__":
+    main()
 
