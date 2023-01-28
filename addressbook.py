@@ -15,14 +15,14 @@ class AddressBook(UserDict):
 
     def iterator(self, n=1):
         index = 1
-        print_block = '-' * 75 + '\n'  # блоки виводу, пагінація
+        print_block = '-' * 100 + '\n'  # блоки виводу, пагінація
         for record in self.data.values():
             print_block += str(record) + '\n'
             if index < n:
                 index += 1
             else:
                 yield print_block
-                index, print_block = 1, '-' * 75 + '\n'
+                index, print_block = 1, '-' * 100 + '\n'
         yield print_block  # повертаємо що залишилось якщо < n
 
 
@@ -325,6 +325,10 @@ def open_contacts_from_file():
         return AddressBook()
 
 
+"""
+Словник з командами (key - функція: value - команда)
+"""
+
 COMMANDS = {
     hello: "hello",
     add_phone: "add ",
@@ -337,7 +341,7 @@ COMMANDS = {
     add_address: "address",
     search: "sear",
     help_info: "info",
-    exit_save_change: "."
+    # exit_save_change: "."
 }
 
 """
@@ -358,7 +362,7 @@ def parser_command(user_input: str):
 """
 
 
-def main():
+def main_addressbook():
     print(start_info())
     ab = open_contacts_from_file()
 
@@ -368,12 +372,9 @@ def main():
             exit_save_change(ab)
             break
         command, data = parser_command(user_input)
-
         if not command:
             print("Sorry, I don't understand you!")
         else:
             print(command(*data, ab=ab))
 
 
-if __name__ == "__main__":
-    main()
