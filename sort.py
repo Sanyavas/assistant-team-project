@@ -10,15 +10,25 @@ extentions_music = ['.mp3', '.ogg', '.wav', '.amr']
 extentions_archives = ['.zip', '.gz', '.tar']
 folder_name = ['image', 'text', 'video', 'archives', 'other']
 
-symbols = (u"абвгдеёжзийклмнопрстуфхцчшщъыьэюяґіїАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯҐІЇ",
-           u"abvgdeejzijklmnoprstufhzcss_y_euagiiABVGDEEJZIJKLMNOPRSTUFHZCSS_Y_EUAGII")
-tr = {ord(a): ord(b) for a, b in zip(*symbols)}
+
+def translit(name):
+    cyrillic_symbols = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ"
+    translation = (
+        "a", "b", "v", "h", "d", "e", "e", "zh", "z", "y", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
+        "f", "h", "ts", "ch", "sh", "sch", "", "y", "", "e", "yu", "ya", "je", "i", "ji", "g")
+    trans = {}
+
+    for c, l in zip(cyrillic_symbols, translation):
+        trans[ord(c)] = l
+        trans[ord(c.upper())] = l.upper()
+
+    return name.translate(trans)
 
 
 def normalize(name):
     filename, file_extension = os.path.splitext(name)
     return re.sub(r'\W', '_',
-                  filename.translate(tr)) + file_extension
+                  translit(filename)) + file_extension
 
 
 def sort_dir(root_path, current_path, level=0):
@@ -82,7 +92,7 @@ def main():
         if root_path[-1] != '/':
             root_path += '/'
         sort_dir(root_path, root_path)
-        print('Все відсортовано, гг вп')
+        print('Все відсортовано')
     except:
         print('Введіть шлях до теки для сортування')
 
