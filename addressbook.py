@@ -104,9 +104,8 @@ class Address(Filed):
         return self._value
 
     @value.setter
-    def value(self, address):
-
-        self._value = address
+    def value(self, new_address):
+        self._value = new_address.title()
 
 
 class Record:
@@ -264,6 +263,7 @@ def add_address(*args, **kwargs):
 @decor_error
 def show_all(*args, **kwargs):
     ab = kwargs.get('ab')
+    print(ab)
     result = f'Contacts list:\n'
     print_list = ab.iterator()
     for item in print_list:
@@ -327,7 +327,7 @@ def open_contacts_from_file():
 
 COMMANDS = {
     hello: "hello",
-    add_phone: "add",
+    add_phone: "add ",
     change: "change",
     phone: "phone",
     show_all: "show",

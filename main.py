@@ -1,14 +1,14 @@
-"""CHATBOT"""
-
-
-"""
-Головна функція
-"""
-
-
-def main():
-    print("Hello World!")
-
-
-if __name__ == "__main__":
-    main()
+# """CHATBOT"""
+#
+#
+# """
+# Головна функція
+# """
+#
+#
+# def main():
+#     print("Hello World!")
+#
+#
+# if __name__ == "__main__":
+#     main()
