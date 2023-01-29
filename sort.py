@@ -111,7 +111,7 @@ def main():
         sort_dir(root_path, root_path)
         print('Everything is sorted')
     except:
-        print('Error)
+        print('Error')
 
 
 if __name__ == "__main__":
