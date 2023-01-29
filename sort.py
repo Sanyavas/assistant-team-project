@@ -62,6 +62,9 @@ def sort_dir(root_path, current_path, level=0):
         if sort_extentions(extentions_video, file, root_path + 'video/', current_path):
             continue
 
+        if sort_extentions(extentions_music, file, root_path + 'music/', current_path):
+            continue
+
         if sort_archive(extentions_archives, file, root_path + 'archives/', current_path):
             continue
 
