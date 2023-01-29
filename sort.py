@@ -50,7 +50,7 @@ def sort_dir(root_path, current_path, level=0):
 
         if os.path.isdir(current_path+file):
             sort_dir(root_path, current_path+file+'/', level+1)
-            os.rmdir(current_path+file)
+            shutil.rmtree(current_path+file)
             continue
 
         if sort_extentions(extentions_img, file, root_path + 'image/', current_path):
