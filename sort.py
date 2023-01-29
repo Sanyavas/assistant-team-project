@@ -102,18 +102,19 @@ def sort_archive(extentions, file, destination_dir, location_dir):
 
 
 def main():
+    print('\nSorting files\n')
     try:
         root_path = sys.argv[1]
         if root_path[-1] != '/':
             root_path += '/'
         sort_dir(root_path, root_path)
-        print('Все відсортовано')
+        print('Everything is sorted')
     except:
-        root_path = input('Введіть шлях до теки для сортування')
+        root_path = input('Enter the path to the folder to sort: ')
         if root_path[-1] != '/':
             root_path += '/'
         sort_dir(root_path, root_path)
-        print('Все відсортовано')
+        print('Everything is sorted')
 
 
 if __name__ == "__main__":
