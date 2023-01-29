@@ -290,7 +290,7 @@ def next_birthdays(*args, **kwargs: AddressBook):
         if value.days_to_birthday(value.birthday) <= days:
             bd_list.append(value)
     if not bd_list:
-        return f"On birthday for the next {days} days\n"
+        return f"On birthdays for the next {days} days\n"
     for contact in bd_list:
         print(contact)
     return f"Greet Happy Birthday !!!Prize 100 dollars!!!\n"
