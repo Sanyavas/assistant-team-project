@@ -31,6 +31,16 @@ def normalize(name):
                   translit(filename)) + file_extension
 
 
+def rename_files_from_arch(extract_dir, file):
+    extract_dir = extract_dir + file + '/'
+    names = os.listdir(extract_dir)
+    print(names)
+    for name in names:
+        new_name = name.encode('cp437').decode('cp866')
+        os.rename(extract_dir + name,
+                  extract_dir + new_name)
+
+
 def sort_dir(root_path, current_path, level=0):
     names = os.listdir(current_path)
     for file in names:
@@ -79,6 +89,8 @@ def sort_archive(extentions, file, destination_dir, location_dir):
             try:
                 shutil.unpack_archive(
                     location_dir + file, destination_dir + file.removesuffix(extention))
+                rename_files_from_arch(
+                    destination_dir, file.removesuffix(extention))
                 os.remove(location_dir + file)
             except:
                 shutil.move(location_dir + file,
@@ -94,7 +106,11 @@ def main():
         sort_dir(root_path, root_path)
         print('Все відсортовано')
     except:
-        print('Введіть шлях до теки для сортування')
+        root_path = input('Введіть шлях до теки для сортування')
+        if root_path[-1] != '/':
+            root_path += '/'
+        sort_dir(root_path, root_path)
+        print('Все відсортовано')
 
 
 if __name__ == "__main__":
