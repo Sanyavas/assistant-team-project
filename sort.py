@@ -25,12 +25,6 @@ def normalize(name):
 
     return trans_name
 
-# def normalize(name):
-#     filename, file_extension = os.path.splitext(name)
-#     return re.sub(r'\W', '_',
-#                   translit(filename)) + file_extension
-
-
 # def rename_files_from_arch(extract_dir, file):
 #     extract_dir = extract_dir + file + '/'
 #     names = os.listdir(extract_dir)
