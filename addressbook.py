@@ -1,5 +1,5 @@
 """
-CONSOLE BOT 2.2
+A D D R E S S B O O K
 """
 
 from collections import UserDict
@@ -35,7 +35,6 @@ class Filed:
 
 
 class Name(Filed):
-
     @property
     def value(self):
         return self._value
@@ -60,14 +59,16 @@ class Phone(Filed):
             .replace("-", "")
             .replace(" ", "")
         )
-        if len(new_value) == 12:
+        if not new_value.isdigit():
+            print(f"!!! Entered wrong phone: {new_value}, correct 0674523698")
+        elif len(new_value) == 12:
             new_value = "+" + new_value
             self._value = new_value
         elif len(new_value) == 10:
             new_value = "+38" + new_value
             self._value = new_value
         else:
-            print(f"!!! Entered wrong phone: {new_value}")
+            print(f"!!! Entered wrong phone: {new_value}, correct 0674523698")
 
 
 class Birthday(Filed):
@@ -91,7 +92,7 @@ class Email(Filed):
 
     @value.setter
     def value(self, email):
-        new_email = re.search(r"[a-zA-Z][\w._]+@\w+\.\w{2,}", email)
+        new_email = re.search(r"[a-zA-Z0-9][\w._]+@\w+\.\w{2,}", email)
         if new_email:
             self._value = email
         else:
@@ -139,13 +140,19 @@ class Record:
     def add_address(self, address):
         self.address = address
 
+    def days_to_birthday(self, birthday):
+        self.birthday = birthday
+        date_now = datetime.now().date()
+        corr_date = birthday.replace(year=date_now.year)
+        if date_now > corr_date:
+            corr_date = corr_date.replace(year=date_now.year + 1)
+        delta = corr_date - date_now
 
-"""
-Функція-decorator для обробки винятків 
-"""
+        return int(delta.days)
 
 
 def decor_error(func):
+    """Функція-decorator для обробки винятків """
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
@@ -161,18 +168,18 @@ def decor_error(func):
     return wrapper
 
 
-"""
-Функції handlers відповідають за безпосереднє виконання команд
-"""
+"""Функції handlers відповідають за безпосереднє виконання команд"""
 
 
 @decor_error
-def hello(*args, **kwargs):
-    return "How can I help you?"
+def hello(*args, **kwargs: AddressBook):
+    return "How can I help you?\n"
 
 
 @decor_error
-def add_phone(*args, **kwargs):
+def add_phone(*args, **kwargs: AddressBook):
+    """Функція для додавання контакту та телефону, якщо контакт є то додає телефон"""
+
     ab = kwargs.get('ab')
     name = Name(args[0])
     phone = Phone(args[1])
@@ -186,7 +193,9 @@ def add_phone(*args, **kwargs):
 
 
 @decor_error
-def change(*args, **kwargs):
+def change(*args, **kwargs: AddressBook):
+    """Функція для зміни телефону"""
+
     ab = kwargs.get('ab')
     name = Name(args[0])
     phone_old = Phone(args[1])
@@ -201,7 +210,9 @@ def change(*args, **kwargs):
 
 
 @decor_error
-def phone(*args, **kwargs):
+def phone(*args, **kwargs: AddressBook):
+    """Функція для виведення телефону контакту"""
+
     name = Name(args[0])
     ab = kwargs.get('ab')
     rec = ab.get(name.value)
@@ -211,7 +222,9 @@ def phone(*args, **kwargs):
 
 
 @decor_error
-def delete(*args, **kwargs):
+def delete(*args, **kwargs: AddressBook):
+    """Функція для видалення контакту"""
+
     ab = kwargs.get('ab')
     name = Name(args[0])
     rec = ab.get(name.value)
@@ -222,7 +235,9 @@ def delete(*args, **kwargs):
 
 
 @decor_error
-def add_birthday(*args, **kwargs):
+def add_birthday(*args, **kwargs: AddressBook):
+    """Функція для додавання дати народження"""
+
     ab = kwargs.get('ab')
     name = Name(args[0])
     bir_day = Birthday(args[1])
@@ -235,7 +250,9 @@ def add_birthday(*args, **kwargs):
 
 
 @decor_error
-def add_email(*args, **kwargs):
+def add_email(*args, **kwargs: AddressBook):
+    """Функція для додавання email"""
+
     ab = kwargs.get('ab')
     name = Name(args[0])
     email = Email(args[1])
@@ -248,7 +265,9 @@ def add_email(*args, **kwargs):
 
 
 @decor_error
-def add_address(*args, **kwargs):
+def add_address(*args, **kwargs: AddressBook):
+    """Функція для додавання адреси"""
+
     ab = kwargs.get('ab')
     name = Name(args[0])
     address = Address(args[1])
@@ -261,9 +280,27 @@ def add_address(*args, **kwargs):
 
 
 @decor_error
-def show_all(*args, **kwargs):
+def next_birthdays(*args, **kwargs: AddressBook):
+    """Функція виводить список контактів, у яких день народження через задану кількість днів від поточної дати"""
+
     ab = kwargs.get('ab')
-    print(ab)
+    days = int(args[0])
+    bd_list = []
+    for value in ab.values():
+        if value.days_to_birthday(value.birthday) <= days:
+            bd_list.append(value)
+    if not bd_list:
+        return f"On birthday for the next {days} days\n"
+    for contact in bd_list:
+        print(contact)
+    return f"Greet Happy Birthday !!!Prize 100 dollars!!!\n"
+
+
+@decor_error
+def show_all(*args, **kwargs: AddressBook):
+    """Функція для виведення вмісту книги контактів"""
+
+    ab = kwargs.get('ab')
     result = f'Contacts list:\n'
     print_list = ab.iterator()
     for item in print_list:
@@ -272,28 +309,37 @@ def show_all(*args, **kwargs):
 
 
 @decor_error
-def search(*args, **kwargs):
+def search(*args, **kwargs: AddressBook):
+    """Функція для пошуку вмісту книги контактів за кількома цифрами номера телефону або літерами імені тощо"""
+
     ab = kwargs.get('ab')
     s_search = args[0]
-    result = []
+    contacts = []
     for contact in ab.values():
         contact = str(contact)
         if s_search.lower() in contact.lower():
-            result.append(contact)
-    return result
+            contacts.append(contact)
+    if not contacts:
+        return f"On request <{s_search}> don't found contacts\n"
+    for contact in contacts:
+        print(contact)
+    return f"On request <{s_search}> found these contacts\n"
 
 
-def help_info(*args, **kwargs):
-    return f"{'~' * 136}\nI know this commands: >hello< >add<, >change<, " \
-           f">show<, >phone<, >del<, >birt<, >email<, >address<, >sear<" \
-           f" and for Exit:(., close, exit)\n{'~' * 136}"
+def help_info(*args, **kwargs: AddressBook):
+    return f"I N F O:\n{'~' * 30}\ncommands:\n>hello<\n>add<: add name and phone\n>change<: change phone\n" \
+           f">show<: show all AddressBook\n>phone<: show phone\n>del<: del contact\n>birt<: add birthday\n" \
+           f">email<: add email\n>address<: add address\n>sear<: search\n>nb<: next birthday\n>info<: information\n" \
+           f">., close, exit<: exit\n{'~' * 30}\n"
 
 
 def start_info():
-    return f"\n Hello I'm console bot, I was created to record contacts.\n{'~' * 57}"
+    return f"\n A D D R E S S B O O K \n{'~' * 23}\nenter: info\n"
 
 
-def exit_save_change(ab):
+def exit_save_change(ab: AddressBook):
+    """Функція для запиту на збереження інформації"""
+
     while True:
         user_input_save = input("Save change? y/n: ")
         if user_input_save == "y":
@@ -306,18 +352,17 @@ def exit_save_change(ab):
     print("Good bye!")
 
 
-"""
-Функції для збереження у файл та завантаження контактів з файлу у class AddressBook()
-"""
-
-
 def save_contacts_to_file(contacts):
+    """Функція для збереження у файл"""
+
     with open("AddressBook.bin", 'wb') as file:
         pickle.dump(contacts, file)
         print("Changes saved.")
 
 
 def open_contacts_from_file():
+    """Функція для завантаження контактів з файлу"""
+
     try:
         with open("AddressBook.bin", "rb") as file:
             return pickle.load(file)
@@ -325,9 +370,7 @@ def open_contacts_from_file():
         return AddressBook()
 
 
-"""
-Словник з командами (key - функція: value - команда)
-"""
+"""Словник з командами (key - функція: value - команда)"""
 
 COMMANDS = {
     hello: "hello",
@@ -339,17 +382,16 @@ COMMANDS = {
     add_birthday: "birt",
     add_email: "email",
     add_address: "address",
+    next_birthdays: "nb",
     search: "sear",
     help_info: "info",
-    # exit_save_change: "."
+    # save_contacts_to_file: "save"
 }
-
-"""
-Функція парсить строку яку ввів користувач, розділяє на команту та іншу інформація
-"""
 
 
 def parser_command(user_input: str):
+    """Функція парсить строку яку ввів користувач, розділяє на команту та іншу інформація"""
+
     for command, key_word in COMMANDS.items():
         if user_input.lower().startswith(key_word):
             return command, user_input.replace(key_word, "").strip().split(" ")
@@ -357,12 +399,9 @@ def parser_command(user_input: str):
     return None, None
 
 
-"""
-Головна функція
-"""
-
-
 def main():
+    """Головна функція"""
+
     print(start_info())
     ab = open_contacts_from_file()
 
@@ -373,11 +412,10 @@ def main():
             break
         command, data = parser_command(user_input)
         if not command:
-            print("Sorry, I don't understand you!")
+            print("Sorry, I don't understand you!\n")
         else:
             print(command(*data, ab=ab))
 
 
 if __name__ == "__main__":
     main()
-

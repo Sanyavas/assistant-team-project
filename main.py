@@ -8,8 +8,9 @@ from addressbook import main as ab_main
 
 
 def main():
-    user_input = input("Main menu. Enter command >>>")
-    if user_input == "ab":
+    print(f"COMANDS:\n{'-' * 50}\nMain menu\n1: AddressBook")
+    user_input = input("Enter command >>>")
+    if user_input == "1":
         ab_main()
     else:
         print(f"I don't understand you!!")
