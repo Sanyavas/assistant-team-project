@@ -60,7 +60,7 @@ class Phone(Filed):
             .replace(" ", "")
         )
         if not new_value.isdigit():
-            print(f"!!! Entered wrong phone: {new_value}, correct 0674523698")
+            print(f"!!! Entered wrong phone: {new_value}, correct phone: 0674523698")
         elif len(new_value) == 12:
             new_value = "+" + new_value
             self._value = new_value
@@ -68,7 +68,7 @@ class Phone(Filed):
             new_value = "+38" + new_value
             self._value = new_value
         else:
-            print(f"!!! Entered wrong phone: {new_value}, correct 0674523698")
+            print(f"!!! Entered wrong phone: {new_value}, correct phone: 0674523698")
 
 
 class Birthday(Filed):
@@ -152,7 +152,7 @@ class Record:
 
 
 def decor_error(func):
-    """Функція-decorator для обробки винятків """
+    """Функція-декоратор для обробки винятків """
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
@@ -206,19 +206,21 @@ def change(*args, **kwargs: AddressBook):
         ab.add_record(rec)
         return f"Contact {name} was change -> old phone: {phone_old} new phone: {phone_new}"
     else:
-        return f"Name {name} don't in AddressBook"
+        return f"Name {name} isn't in the AddressBook"
 
 
 @decor_error
-def phone(*args, **kwargs: AddressBook):
+def phone(*args, **kwargs: AddressBook):  # !!!!!!!!!!!!!!!!!!!!!!!!!!!
     """Функція для виведення телефону контакту"""
 
     name = Name(args[0])
     ab = kwargs.get('ab')
     rec = ab.get(name.value)
     if rec:
-        return f"{ab.data.get(name.value)}"
-    return f"Name {name} don't in AddressBook"
+        for i in ab.values():
+            if i.name:
+                return i.phone
+    return f"Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -231,7 +233,7 @@ def delete(*args, **kwargs: AddressBook):
     if rec:
         ab.pop(name.value)
         return f"Contact {name} deleted"
-    return f"Name {name} don't in AddressBook"
+    return f"Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -246,7 +248,7 @@ def add_birthday(*args, **kwargs: AddressBook):
         rec.add_birthday(bir_day.value)
         ab.add_record(rec)
         return f"Contact {name} was add birthday {bir_day}"
-    return f"Name {name} don't in AddressBook"
+    return f"Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -261,7 +263,7 @@ def add_email(*args, **kwargs: AddressBook):
         rec.add_email(email.value)
         ab.add_record(rec)
         return f"Contact {name} was add email {email}"
-    return f"Name {name} don't in AddressBook"
+    return f"Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -276,7 +278,7 @@ def add_address(*args, **kwargs: AddressBook):
         rec.add_address(address.value)
         ab.add_record(rec)
         return f"Contact {name} was add address {address}"
-    return f"Name {name} don't in AddressBook"
+    return f"Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -390,7 +392,7 @@ COMMANDS = {
 
 
 def parser_command(user_input: str):
-    """Функція парсить строку яку ввів користувач, розділяє на команту та іншу інформація"""
+    """Функція парсить строку яку ввів користувач, розділяє на команду та іншу інформацію"""
 
     for command, key_word in COMMANDS.items():
         if user_input.lower().startswith(key_word):
