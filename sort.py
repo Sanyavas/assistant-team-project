@@ -31,14 +31,14 @@ def normalize(name):
                   translit(filename)) + file_extension
 
 
-def rename_files_from_arch(extract_dir, file):
-    extract_dir = extract_dir + file + '/'
-    names = os.listdir(extract_dir)
-    print(names)
-    for name in names:
-        new_name = name.encode('cp437').decode('cp866')
-        os.rename(extract_dir + name,
-                  extract_dir + new_name)
+# def rename_files_from_arch(extract_dir, file):
+#     extract_dir = extract_dir + file + '/'
+#     names = os.listdir(extract_dir)
+#     print(names)
+#     for name in names:
+#         new_name = name.encode('cp437').decode('cp866')
+#         os.rename(extract_dir + name,
+#                   extract_dir + new_name)
 
 
 def sort_dir(root_path, current_path, level=0):
@@ -92,8 +92,8 @@ def sort_archive(extentions, file, destination_dir, location_dir):
             try:
                 shutil.unpack_archive(
                     location_dir + file, destination_dir + file.removesuffix(extention))
-                rename_files_from_arch(
-                    destination_dir, file.removesuffix(extention))
+#                 rename_files_from_arch(
+#                     destination_dir, file.removesuffix(extention))
                 os.remove(location_dir + file)
             except:
                 shutil.move(location_dir + file,
@@ -104,17 +104,14 @@ def sort_archive(extentions, file, destination_dir, location_dir):
 def main():
     print('\nSorting files\n')
     try:
-        root_path = sys.argv[1]
-        if root_path[-1] != '/':
-            root_path += '/'
-        sort_dir(root_path, root_path)
-        print('Everything is sorted')
-    except:
+        #root_path = sys.argv[1]
         root_path = input('Enter the path to the folder to sort: ')
         if root_path[-1] != '/':
             root_path += '/'
         sort_dir(root_path, root_path)
         print('Everything is sorted')
+    except:
+        print('Error)
 
 
 if __name__ == "__main__":
