@@ -3,14 +3,16 @@ import sys
 import shutil
 import re
 
-extentions_img = ['.jpeg', '.png', '.jpg', '.svg']
-extentions_doc = ['.doc', '.docx', '.txt', '.pdf', '.xlsx', '.pptx']
-extentions_video = ['.avi', '.mp4', '.mov', '.mkv']
-extentions_music = ['.mp3', '.ogg', '.wav', '.amr']
-extentions_archives = ['.zip', '.gz', '.tar']
-folder_name = ['image', 'text', 'video', 'archives', 'other']
+extensions_img = ['.jpeg', '.png', '.jpg', '.svg']
+extensions_doc = ['.doc', '.docx', '.txt', '.pdf', '.xlsx', '.pptx']
+extensions_video = ['.avi', '.mp4', '.mov', '.mkv']
+extensions_music = ['.mp3', '.ogg', '.wav', '.amr']
+extensions_archives = ['.zip', '.gz', '.tar', '.deb', '.rar']
+folder_name = ['image', 'text', 'video', 'music', 'archives', 'other']
+
 
 def normalize(name):
+    """ Функція змінює транлітерацію файлів з кирилиці на латиницю """
     cyrillic_symbols = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ"
     translation = (
         "a", "b", "v", "g", "d", "e", "e", "j", "z", "y", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
@@ -25,17 +27,9 @@ def normalize(name):
 
     return trans_name
 
-# def rename_files_from_arch(extract_dir, file):
-#     extract_dir = extract_dir + file + '/'
-#     names = os.listdir(extract_dir)
-#     print(names)
-#     for name in names:
-#         new_name = name.encode('cp437').decode('cp866')
-#         os.rename(extract_dir + name,
-#                   extract_dir + new_name)
-
 
 def sort_dir(root_path, current_path, level=0):
+    """ Функція виконує проходження по елементам в директорії і виконується рекурсія, якщо це тека """
     names = os.listdir(current_path)
     for file in names:
 
@@ -47,19 +41,19 @@ def sort_dir(root_path, current_path, level=0):
             shutil.rmtree(current_path+file)
             continue
 
-        if sort_extentions(extentions_img, file, root_path + 'image/', current_path):
+        if sort_extensions(extensions_img, file, root_path + 'image/', current_path):
             continue
 
-        if sort_extentions(extentions_doc, file, root_path + 'text/', current_path):
+        if sort_extensions(extensions_doc, file, root_path + 'text/', current_path):
             continue
 
-        if sort_extentions(extentions_video, file, root_path + 'video/', current_path):
+        if sort_extensions(extensions_video, file, root_path + 'video/', current_path):
             continue
 
-        if sort_extentions(extentions_music, file, root_path + 'music/', current_path):
+        if sort_extensions(extensions_music, file, root_path + 'music/', current_path):
             continue
 
-        if sort_archive(extentions_archives, file, root_path + 'archives/', current_path):
+        if sort_archive(extensions_archives, file, root_path + 'archives/', current_path):
             continue
 
         if not os.path.exists(root_path + 'other/' + file):
@@ -68,9 +62,10 @@ def sort_dir(root_path, current_path, level=0):
             shutil.move(current_path + file, root_path + 'other/' + file)
 
 
-def sort_extentions(extentions, file, destination_dir, location_dir):
-    for extention in extentions:
-        if extention in file.lower():
+def sort_extensions(extensions, file, destination_dir, location_dir):
+    """ Функція виконує проходження по розширенням і сортування файлів згідно з цим """
+    for extension in extensions:
+        if extension in file.lower():
             if not os.path.exists(destination_dir):
                 os.makedirs(destination_dir)
             shutil.move(location_dir + file,
@@ -78,16 +73,15 @@ def sort_extentions(extentions, file, destination_dir, location_dir):
             return True
 
 
-def sort_archive(extentions, file, destination_dir, location_dir):
-    for extention in extentions:
-        if extention in file.lower():
+def sort_archive(extensions, file, destination_dir, location_dir):
+    """ Функція виконує розархівування і сортування архівів"""
+    for extension in extensions:
+        if extension in file.lower():
             if not os.path.exists(destination_dir):
                 os.makedirs(destination_dir)
             try:
                 shutil.unpack_archive(
-                    location_dir + file, destination_dir + file.removesuffix(extention))
-#                 rename_files_from_arch(
-#                     destination_dir, file.removesuffix(extention))
+                    location_dir + file, destination_dir + file.removesuffix(extension))
                 os.remove(location_dir + file)
             except:
                 shutil.move(location_dir + file,
@@ -95,8 +89,20 @@ def sort_archive(extentions, file, destination_dir, location_dir):
             return True
 
 
+def count_files(dir_path):
+    """Лічильник файлів"""
+    count = 0
+    for root_dir, cur_dir, files in os.walk(dir_path):
+        if files != ['.DS_Store']:
+            print(files)
+            count += len(files)
+
+    return f'File count: {count}'
+
+
 def main():
-    print('\nSorting files\n')
+    """ Основна функція,яка робить запит на введення шляху в директорію для сортування"""
+    print(f'\n{"~" * 25}\nS O R T I N G   F I L E S\n{"~" * 25}\n')
     try:
         #root_path = sys.argv[1]
         root_path = input('Enter the path to the folder to sort: ')
@@ -104,6 +110,7 @@ def main():
             root_path += '/'
         sort_dir(root_path, root_path)
         print('Everything is sorted')
+        print(count_files(root_path))
     except:
         print('Error')
 
