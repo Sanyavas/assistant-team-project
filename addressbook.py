@@ -1,11 +1,12 @@
-"""
-A D D R E S S B O O K
-"""
+"""A D D R E S S B O O K"""
 
 from collections import UserDict
 from datetime import datetime
-import re
+from information import start_info, help_info
 import pickle
+from prompt_toolkit import prompt
+from prompt_tool import Completer, RainbowLexer
+import re
 
 
 class AddressBook(UserDict):
@@ -15,7 +16,7 @@ class AddressBook(UserDict):
 
     def iterator(self, n=1):
         index = 1
-        print_block = '-' * 100 + '\n'  # блоки виводу, пагінація
+        print_block = '-' * 100 + '\n'
         for record in self.data.values():
             print_block += str(record) + '\n'
             if index < n:
@@ -60,7 +61,7 @@ class Phone(Filed):
             .replace(" ", "")
         )
         if not new_value.isdigit():
-            print(f"!!! Entered wrong phone: {new_value}, correct 0674523698")
+            print(f"!!! Entered wrong phone: {new_value}, correct phone: 0674523698")
         elif len(new_value) == 12:
             new_value = "+" + new_value
             self._value = new_value
@@ -68,7 +69,7 @@ class Phone(Filed):
             new_value = "+38" + new_value
             self._value = new_value
         else:
-            print(f"!!! Entered wrong phone: {new_value}, correct 0674523698")
+            print(f"!!! Entered wrong phone: {new_value}, correct phone: 0674523698")
 
 
 class Birthday(Filed):
@@ -152,7 +153,8 @@ class Record:
 
 
 def decor_error(func):
-    """Функція-decorator для обробки винятків """
+    """Функція-декоратор для обробки винятків """
+
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
@@ -206,7 +208,7 @@ def change(*args, **kwargs: AddressBook):
         ab.add_record(rec)
         return f"Contact {name} was change -> old phone: {phone_old} new phone: {phone_new}"
     else:
-        return f"Name {name} don't in AddressBook"
+        return f"Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -217,8 +219,10 @@ def phone(*args, **kwargs: AddressBook):
     ab = kwargs.get('ab')
     rec = ab.get(name.value)
     if rec:
-        return f"{ab.data.get(name.value)}"
-    return f"Name {name} don't in AddressBook"
+        for value in ab.values():
+            return f'{name}: phone:{value.phones}'
+
+    return f"Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -231,7 +235,7 @@ def delete(*args, **kwargs: AddressBook):
     if rec:
         ab.pop(name.value)
         return f"Contact {name} deleted"
-    return f"Name {name} don't in AddressBook"
+    return f"Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -246,7 +250,7 @@ def add_birthday(*args, **kwargs: AddressBook):
         rec.add_birthday(bir_day.value)
         ab.add_record(rec)
         return f"Contact {name} was add birthday {bir_day}"
-    return f"Name {name} don't in AddressBook"
+    return f"Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -261,7 +265,7 @@ def add_email(*args, **kwargs: AddressBook):
         rec.add_email(email.value)
         ab.add_record(rec)
         return f"Contact {name} was add email {email}"
-    return f"Name {name} don't in AddressBook"
+    return f"Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -276,12 +280,12 @@ def add_address(*args, **kwargs: AddressBook):
         rec.add_address(address.value)
         ab.add_record(rec)
         return f"Contact {name} was add address {address}"
-    return f"Name {name} don't in AddressBook"
+    return f"Name {name} isn't in the AddressBook"
 
 
 @decor_error
 def next_birthdays(*args, **kwargs: AddressBook):
-    """Функція виводить список контактів, у яких день народження через задану кількість днів від поточної дати"""
+    """Функція виводить список контактів, у яких день народження від поточної дати до задану кількість днів"""
 
     ab = kwargs.get('ab')
     days = int(args[0])
@@ -290,10 +294,10 @@ def next_birthdays(*args, **kwargs: AddressBook):
         if value.days_to_birthday(value.birthday) <= days:
             bd_list.append(value)
     if not bd_list:
-        return f"On birthday for the next {days} days\n"
+        return f"No birthdays for the next {days} days"
     for contact in bd_list:
         print(contact)
-    return f"Greet Happy Birthday !!!Prize 100 dollars!!!\n"
+    return f"Who to congratulate on his birthday!!!"
 
 
 @decor_error
@@ -320,21 +324,10 @@ def search(*args, **kwargs: AddressBook):
         if s_search.lower() in contact.lower():
             contacts.append(contact)
     if not contacts:
-        return f"On request <{s_search}> don't found contacts\n"
+        return f"On request <{s_search}> don't found contacts"
     for contact in contacts:
         print(contact)
-    return f"On request <{s_search}> found these contacts\n"
-
-
-def help_info(*args, **kwargs: AddressBook):
-    return f"I N F O:\n{'~' * 30}\ncommands:\n>hello<\n>add<: add name and phone\n>change<: change phone\n" \
-           f">show<: show all AddressBook\n>phone<: show phone\n>del<: del contact\n>birt<: add birthday\n" \
-           f">email<: add email\n>address<: add address\n>sear<: search\n>nb<: next birthday\n>info<: information\n" \
-           f">., close, exit<: exit\n{'~' * 30}\n"
-
-
-def start_info():
-    return f"\n A D D R E S S B O O K \n{'~' * 23}\nenter: info\n"
+    return f"On request <{s_search}> found these contacts"
 
 
 def exit_save_change(ab: AddressBook):
@@ -374,23 +367,22 @@ def open_contacts_from_file():
 
 COMMANDS = {
     hello: "hello",
-    add_phone: "add ",
+    add_phone: "add",
     change: "change",
     phone: "phone",
     show_all: "show",
     delete: "del",
-    add_birthday: "birt",
+    add_birthday: "birth",
     add_email: "email",
     add_address: "address",
-    next_birthdays: "nb",
+    next_birthdays: "nxbirth",
     search: "sear",
     help_info: "info",
-    # save_contacts_to_file: "save"
 }
 
 
 def parser_command(user_input: str):
-    """Функція парсить строку яку ввів користувач, розділяє на команту та іншу інформація"""
+    """Функція парсить строку яку ввів користувач, розділяє на команду та іншу інформацію"""
 
     for command, key_word in COMMANDS.items():
         if user_input.lower().startswith(key_word):
@@ -400,19 +392,19 @@ def parser_command(user_input: str):
 
 
 def main():
-    """Головна функція"""
+    """Головна функція AddressBook"""
 
     print(start_info())
     ab = open_contacts_from_file()
 
     while True:
-        user_input = input("Enter command>>>")
+        user_input = prompt("\nEnter command>>> ", completer=Completer, lexer=RainbowLexer())
         if user_input.lower() in ["close", "exit", "."]:
             exit_save_change(ab)
             break
         command, data = parser_command(user_input)
         if not command:
-            print("Sorry, I don't understand you!\n")
+            print("\nSorry, I don't understand you!")
         else:
             print(command(*data, ab=ab))
 
