@@ -1,7 +1,7 @@
 """Функції виводу інформації"""
 
 
-def help_info(*args, **kwargs):
+def help_info_ab(*args, **kwargs):
     """help info for AddressBook"""
 
     return f"I N F O:" \
@@ -26,10 +26,38 @@ def help_info(*args, **kwargs):
            f"\nCommand input example:  >command< >name< >info<"
 
 
-def start_info():
+def help_info_nb(*args, **kwargs):
+    """help info for NoteBook"""
+
+    return f"I N F O:" \
+           f"\n{'~' * 50}" \
+           f"\ncommands:" \
+           f"\n{'~' * 50}" \
+           f"\n>add<: add new note" \
+           f"\n>del<: delete note" \
+           f"\n>change<: change note" \
+           f"\n>show<: show all NoteBook" \
+           f"\n>tag+<: add tag" \
+           f"\n>find<: find notes" \
+           f"\n>tags<: find and sort by tegs" \
+           f"\n>., close, exit<: exit" \
+           f"\n{'~' * 50}" \
+           f"\nCommand input example:  >command< >note<"
+
+
+def start_info_ab():
     """start info for AddressBook"""
 
     return f"\n{'~' * 23}" \
            f"\n A D D R E S S B O O K " \
+           f"\n{'~' * 23}" \
+           f"\nenter: info"
+
+
+def start_info_nb():
+    """start info for NoteBook"""
+
+    return f"\n{'~' * 23}" \
+           f"\n N O T E B O O K " \
            f"\n{'~' * 23}" \
            f"\nenter: info"

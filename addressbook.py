@@ -2,7 +2,7 @@
 
 from collections import UserDict
 from datetime import datetime
-from information import start_info, help_info
+from information import start_info_ab, help_info_ab
 import pickle
 from prompt_toolkit import prompt
 from prompt_tool import Completer, RainbowLexer
@@ -274,7 +274,8 @@ def add_address(*args, **kwargs: AddressBook):
 
     ab = kwargs.get('ab')
     name = Name(args[0])
-    address = Address(args[1])
+    address_row = ", ".join(args[1:])
+    address = Address(address_row)
     rec = ab.get(name.value)
     if rec:
         rec.add_address(address.value)
@@ -367,7 +368,7 @@ def open_contacts_from_file():
 
 COMMANDS = {
     hello: "hello",
-    add_phone: "add",
+    add_phone: "add ",
     change: "change",
     phone: "phone",
     show_all: "show",
@@ -377,7 +378,7 @@ COMMANDS = {
     add_address: "address",
     next_birthdays: "nxbirth",
     search: "sear",
-    help_info: "info",
+    help_info_ab: "info",
 }
 
 
@@ -394,7 +395,7 @@ def parser_command(user_input: str):
 def main():
     """Головна функція AddressBook"""
 
-    print(start_info())
+    print(start_info_ab())
     ab = open_contacts_from_file()
 
     while True:
