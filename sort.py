@@ -23,10 +23,10 @@ def normalize(name):
     for c, l in zip(cyrillic_symbols, translation):
         trans[ord(c)] = l
         trans[ord(c.upper())] = l.upper()
-    trans_name = name.translate(trans)
-    trans_name = re.sub(r'\W', '.', trans_name)
-
-    return trans_name
+        
+    filename, file_extension = os.path.splitext(name)
+    return re.sub(r'\W', '_',
+                  filename.translate(trans)) + file_extension
 
 
 def sort_dir(root_path, current_path, level=0):
