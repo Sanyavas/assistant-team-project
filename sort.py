@@ -2,12 +2,13 @@ import os
 import sys
 import shutil
 import re
+import rarfile
 
 extensions_img = ['.jpeg', '.png', '.jpg', '.svg']
 extensions_doc = ['.doc', '.docx', '.txt', '.pdf', '.xlsx', '.pptx']
 extensions_video = ['.avi', '.mp4', '.mov', '.mkv']
 extensions_music = ['.mp3', '.ogg', '.wav', '.amr']
-extensions_archives = ['.zip', '.gz', '.tar', '.deb', '.rar']
+extensions_archives = ['.zip', '.gz', '.tar', '.rar']
 folder_name = ['image', 'text', 'video', 'music', 'archives', 'other']
 
 
@@ -80,8 +81,14 @@ def sort_archive(extensions, file, destination_dir, location_dir):
             if not os.path.exists(destination_dir):
                 os.makedirs(destination_dir)
             try:
-                shutil.unpack_archive(
-                    location_dir + file, destination_dir + file.removesuffix(extension))
+                if extension == '.rar':
+                    r = rarfile.RarFile(location_dir + file)
+                    r.extractall(destination_dir +
+                                 file.removesuffix(extension))
+                    r.close()
+                else:
+                    shutil.unpack_archive(
+                        location_dir + file, destination_dir + file.removesuffix(extension))
                 os.remove(location_dir + file)
             except:
                 shutil.move(location_dir + file,
