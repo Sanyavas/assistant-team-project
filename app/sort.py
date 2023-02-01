@@ -1,5 +1,7 @@
+"""S O R T   F I L E"""
+
+
 import os
-import sys
 import shutil
 import re
 import rarfile
@@ -13,7 +15,8 @@ folder_name = ['image', 'text', 'video', 'music', 'archives', 'other']
 
 
 def normalize(name):
-    """ Функція змінює транлітерацію файлів з кирилиці на латиницю """
+    """Transliteration of files from Cyrillic to Latin"""
+
     cyrillic_symbols = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ"
     translation = (
         "a", "b", "v", "g", "d", "e", "e", "j", "z", "y", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
@@ -30,7 +33,8 @@ def normalize(name):
 
 
 def sort_dir(root_path, current_path, level=0):
-    """ Функція виконує проходження по елементам в директорії і виконується рекурсія, якщо це тека """
+    """Recursion through directories"""
+
     names = os.listdir(current_path)
     for file in names:
 
@@ -44,16 +48,12 @@ def sort_dir(root_path, current_path, level=0):
 
         if sort_extensions(extensions_img, file, root_path + 'image/', current_path):
             continue
-
         if sort_extensions(extensions_doc, file, root_path + 'text/', current_path):
             continue
-
         if sort_extensions(extensions_video, file, root_path + 'video/', current_path):
             continue
-
         if sort_extensions(extensions_music, file, root_path + 'music/', current_path):
             continue
-
         if sort_archive(extensions_archives, file, root_path + 'archives/', current_path):
             continue
 
@@ -64,7 +64,8 @@ def sort_dir(root_path, current_path, level=0):
 
 
 def sort_extensions(extensions, file, destination_dir, location_dir):
-    """ Функція виконує проходження по розширенням і сортування файлів згідно з цим """
+    """Sorting files by extension"""
+
     for extension in extensions:
         if extension in file.lower():
             if not os.path.exists(destination_dir):
@@ -75,7 +76,8 @@ def sort_extensions(extensions, file, destination_dir, location_dir):
 
 
 def sort_archive(extensions, file, destination_dir, location_dir):
-    """ Функція виконує розархівування і сортування архівів"""
+    """Unzipping and sorting archives"""
+
     for extension in extensions:
         if extension in file.lower():
             if not os.path.exists(destination_dir):
@@ -97,7 +99,8 @@ def sort_archive(extensions, file, destination_dir, location_dir):
 
 
 def count_files(dir_path):
-    """Лічильник файлів"""
+    """File counter"""
+
     count = 0
     for root_dir, cur_dir, files in os.walk(dir_path):
         if files != ['.DS_Store']:
@@ -108,18 +111,24 @@ def count_files(dir_path):
 
 
 def main():
-    """ Основна функція,яка робить запит на введення шляху в директорію для сортування"""
-    print(f'\n{"~" * 25}\nS O R T I N G   F I L E S\n{"~" * 25}\n')
-    try:
-        #root_path = sys.argv[1]
-        root_path = input('Enter the path to the folder to sort: ')
-        if root_path[-1] != '/':
-            root_path += '/'
-        sort_dir(root_path, root_path)
-        print('Everything is sorted')
-        print(count_files(root_path))
-    except:
-        print('Error')
+    """Main function, which makes a request to enter the path to the directory for sorting"""
+
+    print(f'\n{"~" * 25}\nS O R T I N G   F I L E S\n{"~" * 25}\nExit: 0')
+    while True:
+        try:
+            root_path = input('Enter the path to the folder to sort: ')
+            if root_path == "0":
+                break
+            if root_path[-1] != '/':
+                root_path += '/'
+                sort_dir(root_path, root_path)
+                print('Everything is sorted')
+                print(count_files(root_path))
+            else:
+                print("error, try again")
+
+        except:
+            print('error')
 
 
 if __name__ == "__main__":

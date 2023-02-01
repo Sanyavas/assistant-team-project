@@ -9,6 +9,9 @@ from .prompt_tool import Completer, RainbowLexer
 import re
 
 
+filename = "addressbook.bin"
+
+
 class AddressBook(UserDict):
     def add_record(self, record):
         self.data[record.name.value] = record
@@ -24,7 +27,7 @@ class AddressBook(UserDict):
             else:
                 yield print_block
                 index, print_block = 1, '-' * 100 + '\n'
-        yield print_block  # повертаємо що залишилось якщо < n
+        yield print_block
 
 
 class Filed:
@@ -153,7 +156,7 @@ class Record:
 
 
 def decor_error(func):
-    """Функція-декоратор для обробки винятків """
+    """Decorator for exception handling"""
 
     def wrapper(*args, **kwargs):
         try:
@@ -170,7 +173,7 @@ def decor_error(func):
     return wrapper
 
 
-"""Функції handlers відповідають за безпосереднє виконання команд"""
+"""The handler functions are responsible for the direct execution of commands"""
 
 
 @decor_error
@@ -180,7 +183,7 @@ def hello(*args, **kwargs: AddressBook):
 
 @decor_error
 def add_phone(*args, **kwargs: AddressBook):
-    """Функція для додавання контакту та телефону, якщо контакт є то додає телефон"""
+    """Adding a contact and phone, if there is a contact, it adds the phone"""
 
     ab = kwargs.get('ab')
     name = Name(args[0])
@@ -196,7 +199,7 @@ def add_phone(*args, **kwargs: AddressBook):
 
 @decor_error
 def change(*args, **kwargs: AddressBook):
-    """Функція для зміни телефону"""
+    """Change phone"""
 
     ab = kwargs.get('ab')
     name = Name(args[0])
@@ -213,7 +216,7 @@ def change(*args, **kwargs: AddressBook):
 
 @decor_error
 def phone(*args, **kwargs: AddressBook):
-    """Функція для виведення телефону контакту"""
+    """Contact phone output"""
 
     name = Name(args[0])
     ab = kwargs.get('ab')
@@ -227,7 +230,7 @@ def phone(*args, **kwargs: AddressBook):
 
 @decor_error
 def delete(*args, **kwargs: AddressBook):
-    """Функція для видалення контакту"""
+    """Delete contact"""
 
     ab = kwargs.get('ab')
     name = Name(args[0])
@@ -240,7 +243,7 @@ def delete(*args, **kwargs: AddressBook):
 
 @decor_error
 def add_birthday(*args, **kwargs: AddressBook):
-    """Функція для додавання дати народження"""
+    """Adding date of birth"""
 
     ab = kwargs.get('ab')
     name = Name(args[0])
@@ -255,7 +258,7 @@ def add_birthday(*args, **kwargs: AddressBook):
 
 @decor_error
 def add_email(*args, **kwargs: AddressBook):
-    """Функція для додавання email"""
+    """Adding email"""
 
     ab = kwargs.get('ab')
     name = Name(args[0])
@@ -270,7 +273,7 @@ def add_email(*args, **kwargs: AddressBook):
 
 @decor_error
 def add_address(*args, **kwargs: AddressBook):
-    """Функція для додавання адреси"""
+    """Adding address"""
 
     ab = kwargs.get('ab')
     name = Name(args[0])
@@ -286,7 +289,7 @@ def add_address(*args, **kwargs: AddressBook):
 
 @decor_error
 def next_birthdays(*args, **kwargs: AddressBook):
-    """Функція виводить список контактів, у яких день народження від поточної дати до задану кількість днів"""
+    """Displays a list of contacts whose birthday is between the current date and the specified number of days"""
 
     ab = kwargs.get('ab')
     days = int(args[0])
@@ -303,7 +306,7 @@ def next_birthdays(*args, **kwargs: AddressBook):
 
 @decor_error
 def show_all(*args, **kwargs: AddressBook):
-    """Функція для виведення вмісту книги контактів"""
+    """Displaying the contents of the contact book"""
 
     ab = kwargs.get('ab')
     result = f'Contacts list:\n'
@@ -315,7 +318,7 @@ def show_all(*args, **kwargs: AddressBook):
 
 @decor_error
 def search(*args, **kwargs: AddressBook):
-    """Функція для пошуку вмісту книги контактів за кількома цифрами номера телефону або літерами імені тощо"""
+    """Search the contents of the contact book by several digits of the phone number or letters of the name, etc"""
 
     ab = kwargs.get('ab')
     s_search = args[0]
@@ -332,7 +335,7 @@ def search(*args, **kwargs: AddressBook):
 
 
 def exit_save_change(ab: AddressBook):
-    """Функція для запиту на збереження інформації"""
+    """Request to save information"""
 
     while True:
         user_input_save = input("Save change? y/n: ")
@@ -347,24 +350,24 @@ def exit_save_change(ab: AddressBook):
 
 
 def save_contacts_to_file(contacts):
-    """Функція для збереження у файл"""
+    """Save to file"""
 
-    with open("AddressBook.bin", 'wb') as file:
+    with open(filename, 'wb') as file:
         pickle.dump(contacts, file)
         print("Changes saved.")
 
 
 def open_contacts_from_file():
-    """Функція для завантаження контактів з файлу"""
+    """Loading contacts from a file"""
 
     try:
-        with open("AddressBook.bin", "rb") as file:
+        with open(filename, "rb") as file:
             return pickle.load(file)
     except FileNotFoundError:
         return AddressBook()
 
 
-"""Словник з командами (key - функція: value - команда)"""
+"""Dictionary with commands (key - function: value - command)"""
 
 COMMANDS = {
     hello: "hello",
@@ -383,7 +386,7 @@ COMMANDS = {
 
 
 def parser_command(user_input: str):
-    """Функція парсить строку яку ввів користувач, розділяє на команду та іншу інформацію"""
+    """The function parses the term entered by the user, divides it into a command and other information"""
 
     for command, key_word in COMMANDS.items():
         if user_input.lower().startswith(key_word):
@@ -393,7 +396,7 @@ def parser_command(user_input: str):
 
 
 def main():
-    """Головна функція AddressBook"""
+    """Main function AddressBook"""
 
     print(start_info_ab())
     ab = open_contacts_from_file()

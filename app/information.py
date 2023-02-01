@@ -1,4 +1,4 @@
-"""Функції виводу інформації"""
+"""Information output functions"""
 
 
 def help_info_ab(*args, **kwargs):
@@ -9,21 +9,20 @@ def help_info_ab(*args, **kwargs):
            f"\ncommands:" \
            f"\n{'~' * 50}" \
            f"\n>hello<" \
-           f"\n>add<: add name and phone, if there is a name add phone" \
-           f"\n>change<: change phone" \
-           f"\n>show<: show all AddressBook" \
-           f"\n>phone<: show phone" \
-           f"\n>del<: del contact" \
-           f"\n>birth<: add birthday" \
-           f"\n>email<: add email" \
-           f"\n>address<: add address" \
-           f"\n>search<: search by matches" \
-           f"\n>nxbirt<: next birthday for >n< number of days" \
-           f"\n>info<: information" \
-           f"\n>., close, exit<: exit" \
+           f"\n>add<: add name and phone, if there is a name add phone. example:  >command< >name< >phone<" \
+           f"\n>change<: change phone. example:  >command< >name< >old_phone< >new_phone<" \
+           f"\n>show<: show all AddressBook. example:  >command<" \
+           f"\n>phone<: show phone. example:  >command< >name<" \
+           f"\n>del<: del contact. example:  >command< >name<" \
+           f"\n>birth<: add birthday. example:  >command< >name< >date<" \
+           f"\n>email<: add email. example:  >command< >name< >email<" \
+           f"\n>address<: add address. example:  >command< >name< >address<" \
+           f"\n>search<: search by matches. example:  >command< >target<" \
+           f"\n>nxbirt<: next birthday for >n< number of days. example:  >command< >name< >next number days<" \
+           f"\n>info<: information. example:  >command<" \
+           f"\n>., close, exit<: exit. example:  >command<" \
            f"\n{'~' * 50}" \
-           f"\nContact is created with the phone!" \
-           f"\nCommand input example:  >command< >name< >info<"
+           f"\nContact is created with the phone!"
 
 
 def help_info_nb(*args, **kwargs):
@@ -33,16 +32,15 @@ def help_info_nb(*args, **kwargs):
            f"\n{'~' * 50}" \
            f"\ncommands:" \
            f"\n{'~' * 50}" \
-           f"\n>add<: add new note" \
-           f"\n>del<: delete note" \
-           f"\n>change<: change note" \
-           f"\n>show<: show all NoteBook" \
-           f"\n>tag+<: add tag" \
-           f"\n>find<: find notes" \
-           f"\n>tags<: find and sort by tegs" \
-           f"\n>., close, exit<: exit" \
-           f"\n{'~' * 50}" \
-           f"\nCommand input example:  >command< >note<"
+           f"\n>add<: add new not. example:  >command< >title< >tag< >body<" \
+           f"\n>del<: delete note. example:  >command< >note<" \
+           f"\n>change<: change note. example:  >command< >note_old< >note_new<" \
+           f"\n>show<: show all NoteBook. example:  >command<" \
+           f"\n>tag+<: add tag. example:  >command< >note< >tag<" \
+           f"\n>find<: find notes. example:  >command< >title< >target<" \
+           f"\n>tags<: find and sort by tegs:  >command< >tags<" \
+           f"\n>., close, exit<: exit:  >command<" \
+           f"\n{'~' * 50}"
 
 
 def start_info_ab():
