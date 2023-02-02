@@ -2,12 +2,12 @@
 
 from collections import UserDict
 from datetime import datetime
-from .information import start_info_ab, help_info_ab
+from information import start_info_ab, help_info_ab
 import pickle
+from prettytable import PrettyTable
 from prompt_toolkit import prompt
-from .prompt_tool import Completer, RainbowLexer
+from prompt_tool import Completer, RainbowLexer
 import re
-
 
 filename = "addressbook.bin"
 
@@ -151,7 +151,6 @@ class Record:
         if date_now > corr_date:
             corr_date = corr_date.replace(year=date_now.year + 1)
         delta = corr_date - date_now
-
         return int(delta.days)
 
 
@@ -277,7 +276,7 @@ def add_address(*args, **kwargs: AddressBook):
 
     ab = kwargs.get('ab')
     name = Name(args[0])
-    address_row = ", ".join(args[1:])
+    address_row = " ".join(args[1:])
     address = Address(address_row)
     rec = ab.get(name.value)
     if rec:
@@ -300,20 +299,26 @@ def next_birthdays(*args, **kwargs: AddressBook):
     if not bd_list:
         return f"No birthdays for the next {days} days"
     for contact in bd_list:
-        print(contact)
-    return f"Who to congratulate on his birthday!!!"
+        print(f"{'-' * 100}\n{contact}")
+    return f"{'-' * 100}\nWho to congratulate on his birthday!!!"
 
 
 @decor_error
 def show_all(*args, **kwargs: AddressBook):
     """Displaying the contents of the contact book"""
 
+    x = PrettyTable()
     ab = kwargs.get('ab')
-    result = f'Contacts list:\n'
-    print_list = ab.iterator()
-    for item in print_list:
-        result += f"{item}"
-    return result
+    # result = f'Contacts list:\n'
+    # print_list = ab.iterator()
+    # for item in print_list:
+    #     result += f"{item}"
+    print(f"\nContacts list:")
+    for i in ab.values():
+        x.field_names = ["name", "phone", "email", "address", "birthday"]
+        x.add_row([i.name, i.phones, i.email, i.address, i.birthday])
+
+    return x
 
 
 @decor_error
@@ -322,16 +327,13 @@ def search(*args, **kwargs: AddressBook):
 
     ab = kwargs.get('ab')
     s_search = args[0]
-    contacts = []
     for contact in ab.values():
         contact = str(contact)
         if s_search.lower() in contact.lower():
-            contacts.append(contact)
-    if not contacts:
-        return f"On request <{s_search}> don't found contacts"
-    for contact in contacts:
-        print(contact)
-    return f"On request <{s_search}> found these contacts"
+            print(f'{"-" * 100}\n{contact}')
+        if not contact:
+            return f"On request <{s_search}> don't found contacts"
+    return f"{'-' * 100}\nOn request <{s_search}> found these contacts"
 
 
 def exit_save_change(ab: AddressBook):
@@ -380,7 +382,7 @@ COMMANDS = {
     add_email: "email",
     add_address: "address",
     next_birthdays: "nxbirth",
-    search: "sear",
+    search: "search",
     help_info_ab: "info",
 }
 
@@ -397,7 +399,6 @@ def parser_command(user_input: str):
 
 def main():
     """Main function AddressBook"""
-
     print(start_info_ab())
     ab = open_contacts_from_file()
 

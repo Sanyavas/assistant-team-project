@@ -2,8 +2,8 @@
 
 
 from collections import UserDict, UserString
-from .information import start_info_nb, help_info_nb
-from .prompt_tool import Completer, RainbowLexer
+from information import start_info_nb, help_info_nb
+from prompt_tool import Completer, RainbowLexer
 from prompt_toolkit import prompt
 import pickle
 
@@ -54,7 +54,7 @@ class NoteBook(UserDict):
             self.data[note.title] = note
             return f"Note '{note.title}' was created. {note}"
         else:
-            return f'{note.title} alredy exist'
+            return f'{note.title} already exist'
 
     def del_note(self, note: Note):
         """Deletes note from notebook"""
