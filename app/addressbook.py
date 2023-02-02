@@ -63,14 +63,13 @@ class Phone(Filed):
             .replace("-", "")
             .replace(" ", "")
         )
-        if not new_value.isdigit():
-            print(f"!!! Entered wrong phone: {new_value}, correct phone: 0674523698")
-        elif len(new_value) == 12:
-            new_value = "+" + new_value
-            self._value = new_value
-        elif len(new_value) == 10:
-            new_value = "+38" + new_value
-            self._value = new_value
+        if new_value.isdigit():
+            if len(new_value) == 12:
+                new_value = "+" + new_value
+                self._value = new_value
+            elif len(new_value) == 10:
+                new_value = "+38" + new_value
+                self._value = new_value
         else:
             print(f"!!! Entered wrong phone: {new_value}, correct phone: 0674523698")
 
