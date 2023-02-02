@@ -32,13 +32,13 @@ def help_info_nb(*args, **kwargs):
            f"\n{'~' * 50}" \
            f"\ncommands:" \
            f"\n{'~' * 50}" \
-           f"\n>add<: add new not. example:  >command< >title< >tag< >body<" \
+           f"\n>add<: add new note. example:  >command< >title< >tag< >body<" \
            f"\n>del<: delete note. example:  >command< >note<" \
            f"\n>change<: change note. example:  >command< >note_old< >note_new<" \
            f"\n>show<: show all NoteBook. example:  >command<" \
-           f"\n>tag+<: add tag. example:  >command< >note< >tag<" \
+           f"\n>tag+<: add title. example:  >command< >note< >tag<" \
            f"\n>find<: find notes. example:  >command< >title< >target<" \
-           f"\n>tags<: find and sort by tegs:  >command< >tags<" \
+           f"\n>tags<: find and sort by tegs:  >command< >tag[, tag,tag,...,tag]<" \
            f"\n>., close, exit<: exit:  >command<" \
            f"\n{'~' * 50}"
 
