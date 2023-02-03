@@ -2,8 +2,8 @@
 
 
 from collections import UserDict, UserString
-from information import start_info_nb, help_info_nb
-from prompt_tool import Completer, RainbowLexer
+from .information import start_info_nb, help_info_nb
+from .prompt_tool import Completer, RainbowLexer
 from prompt_toolkit import prompt
 import pickle
 

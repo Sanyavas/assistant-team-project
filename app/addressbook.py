@@ -2,11 +2,11 @@
 
 from collections import UserDict
 from datetime import datetime
-from information import start_info_ab, help_info_ab
+from .information import start_info_ab, help_info_ab
 import pickle
 from prettytable import PrettyTable
 from prompt_toolkit import prompt
-from prompt_tool import Completer, RainbowLexer
+from .prompt_tool import Completer, RainbowLexer
 import re
 
 filename = "addressbook.bin"
@@ -70,7 +70,7 @@ class Phone(Filed):
                 new_value = "+38" + new_value
                 self._value = new_value
         else:
-            print(f"{chr(9940)} Entered wrong phone: {new_value}, correct phone: 0674523698")
+            print(f"{chr(128679)} Entered wrong {chr(128222)}phone: {new_value}, correct phone: 0674523698")
 
 
 class Birthday(Filed):
@@ -84,7 +84,7 @@ class Birthday(Filed):
             new_value = datetime.strptime(birthday, "%d.%m.%Y").date()
             self._value = new_value
         except ValueError:
-            print(f"{chr(9940)} ValueError! Enter correct date %dd.%mm.%yyyy")
+            print(f"{chr(128679)} ValueError! Enter correct {chr(128198)}date %dd.%mm.%yyyy")
 
 
 class Email(Filed):
@@ -98,7 +98,7 @@ class Email(Filed):
         if new_email:
             self._value = email
         else:
-            print(f"{chr(9940)} You entered wrong email! >> {new_email}")
+            print(f"{chr(128679)} You entered wrong {chr(128231)}email! >> {new_email}")
 
 
 class Address(Filed):
@@ -159,13 +159,13 @@ def decor_error(func):
         try:
             return func(*args, **kwargs)
         except IndexError:
-            return "IndexError... Enter name or phone please"
+            return f"{chr(128679)} IndexError... Enter name or phone please"
         except KeyError:
-            return "KeyError..."
+            return f"{chr(128679)} KeyError..."
         except ValueError:
-            return "ValueError..."
+            return f"{chr(128679)} ValueError..."
         except AttributeError:
-            return "AttributeError..."
+            return f"{chr(128679)} AttributeError..."
 
     return wrapper
 
@@ -175,7 +175,7 @@ def decor_error(func):
 
 @decor_error
 def hello(*args, **kwargs: AddressBook):
-    return "How can I help you?\n"
+    return f"{chr(129299)} How can I help you?\n"
 
 
 @decor_error
@@ -191,7 +191,7 @@ def add_phone(*args, **kwargs: AddressBook):
     else:
         rec = Record(name, phone.value)
     ab.add_record(rec)
-    return f"{chr(9989)} Contact {chr(59259)} {name} was created. {chr(9742)} phone: {phone}"
+    return f"{chr(9989)} {name} was created. {chr(128222)}phone: {phone}"
 
 
 @decor_error
@@ -206,9 +206,9 @@ def change(*args, **kwargs: AddressBook):
     if rec:
         rec.change_phone(phone_old.value, phone_new.value)
         ab.add_record(rec)
-        return f"{chr(9989)} Contact {chr(59259)} {name} was change -> old phone: {phone_old} new phone: {phone_new}"
+        return f"{chr(9989)} {name} was change -> old phone: {phone_old} new phone: {phone_new}"
     else:
-        return f"{chr(10006)} Name {name} isn't in the AddressBook"
+        return f"{chr(10062)} Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -220,9 +220,8 @@ def phone(*args, **kwargs: AddressBook):
     rec = ab.get(name.value)
     if rec:
         for value in ab.values():
-            return f' {chr(59259)} {name}: {chr(9742)} phone:{value.phones}'
-
-    return f"{chr(10006)} Name {name} isn't in the AddressBook"
+            return f'{chr(9989)} {name}: {chr(128222)}phone:{value.phones}'
+    return f"{chr(10062)} Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -234,8 +233,8 @@ def delete(*args, **kwargs: AddressBook):
     rec = ab.get(name.value)
     if rec:
         ab.pop(name.value)
-        return f"{chr(9989)} Contact {chr(59259)} {name} deleted {chr(9760)}"
-    return f"{chr(10006)} Name {name} isn't in the AddressBook"
+        return f"{chr(9989)} {name} deleted {chr(10060)} "
+    return f"{chr(10062)} Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -249,8 +248,8 @@ def add_birthday(*args, **kwargs: AddressBook):
     if rec:
         rec.add_birthday(bir_day.value)
         ab.add_record(rec)
-        return f"{chr(9989)} Contact {chr(59259)} {name} was add {chr(9787)} birthday: {bir_day}"
-    return f"{chr(10006)} Name {name} isn't in the AddressBook"
+        return f"{chr(9989)} {name} was add {chr(127874)}birthday: {bir_day}"
+    return f"{chr(10062)} Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -264,8 +263,8 @@ def add_email(*args, **kwargs: AddressBook):
     if rec:
         rec.add_email(email.value)
         ab.add_record(rec)
-        return f"{chr(9989)} Contact {chr(59259)} {name} was add {chr(9993)} email: {email}"
-    return f"{chr(10006)} Name {name} isn't in the AddressBook"
+        return f"{chr(9989)} {name} was add {chr(128231)}email: {email}"
+    return f"{chr(10062)} Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -280,8 +279,8 @@ def add_address(*args, **kwargs: AddressBook):
     if rec:
         rec.add_address(address.value)
         ab.add_record(rec)
-        return f"{chr(9989)} Contact {chr(59259)} {name} was add {chr(60042)} address: {address}"
-    return f"{chr(10006)} Name {chr(59259)} {name} isn't in the AddressBook"
+        return f"{chr(9989)} {name} was add {chr(127968)}address: {address}"
+    return f"{chr(10062)} Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -290,15 +289,16 @@ def next_birthdays(*args, **kwargs: AddressBook):
 
     ab = kwargs.get('ab')
     days = int(args[0])
-    bd_list = []
+    x = PrettyTable()
     for value in ab.values():
         if value.days_to_birthday(value.birthday) <= days:
-            bd_list.append(value)
-    if not bd_list:
-        return f"{chr(10006)} No birthdays for the next {days} days"
-    for contact in bd_list:
-        print(f"{chr(10027) * 120}\n{contact}")
-    return f"{chr(10789) * 120}\nTo congratulate on his birthday!!!"
+            x.field_names = ["name", "phone", "email", "address", "birthday"]
+            x.add_row([value.name, value.phones, value.email, value.address, value.birthday])
+    if x:
+        print(x)
+    else:
+        return f"{chr(10062)} No birthdays for the next {days} days"
+    return f"\nTo congratulate on his {chr(127873)}birthday!!!"
 
 
 @decor_error
@@ -311,11 +311,10 @@ def show_all(*args, **kwargs: AddressBook):
     # print_list = ab.iterator()
     # for item in print_list:
     #     result += f"{item}"
-    print(f"\nContacts list:")
+    print(f"\nContacts list:{chr(128214)}")
     for i in ab.values():
         x.field_names = ["name", "phone", "email", "address", "birthday"]
         x.add_row([i.name, i.phones, i.email, i.address, i.birthday])
-
     return x
 
 
@@ -330,15 +329,15 @@ def search(*args, **kwargs: AddressBook):
         if s_search.lower() in contact.lower():
             print(f'{"-" * 120}\n{contact}')
         if not contact:
-            return f"On request <{s_search}> don't found contacts"
-    return f"{'-' * 120}\nOn request <{s_search}> found these contacts"
+            return f"On request <{s_search}> {chr(128373)}don't found contacts"
+    return f"{'-' * 120}\nOn request <{s_search}> {chr(128373)}found these contacts"
 
 
 def exit_save_change(ab: AddressBook):
     """Request to save information"""
 
     while True:
-        user_input_save = input("Save change? y/n: ")
+        user_input_save = input(f"{chr(128221)}Save change? y/n: ")
         if user_input_save == "y":
             save_contacts_to_file(ab)
             break
@@ -346,7 +345,7 @@ def exit_save_change(ab: AddressBook):
             break
         else:
             continue
-    print("Good bye!")
+    print(f"{chr(128400)}Good bye!")
 
 
 def save_contacts_to_file(contacts):
@@ -401,13 +400,13 @@ def main():
     ab = open_contacts_from_file()
 
     while True:
-        user_input = prompt("\nEnter command>>> ", completer=Completer, lexer=RainbowLexer())
+        user_input = prompt(f"\nEnter command{chr(128073)} ", completer=Completer, lexer=RainbowLexer())
         if user_input.lower() in ["close", "exit", "."]:
             exit_save_change(ab)
             break
         command, data = parser_command(user_input)
         if not command:
-            print("\nSorry, I don't understand you!")
+            print(f"\n{chr(129400)}Sorry, I don't understand you!")
         else:
             print(command(*data, ab=ab))
 

@@ -49,7 +49,7 @@ def start_info_ab():
     return f"\n{'~' * 23}" \
            f"\n A D D R E S S B O O K " \
            f"\n{'~' * 23}" \
-           f"\nenter: info"
+           f"\nenter: {chr(128227)}info"
 
 
 def start_info_nb():

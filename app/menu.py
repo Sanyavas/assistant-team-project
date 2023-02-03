@@ -1,8 +1,8 @@
 """C H A T B O T"""
 
-from addressbook import main as ab_main
-from notes import main as nb_main
-from sort import main as sr_main
+from .addressbook import main as ab_main
+from .notes import main as nb_main
+from .sort import main as sr_main
 
 
 def main():
