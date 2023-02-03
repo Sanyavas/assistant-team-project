@@ -15,7 +15,6 @@ filename = "addressbook.bin"
 class AddressBook(UserDict):
     def add_record(self, record):
         self.data[record.name.value] = record
-        print(record)
 
     def iterator(self, n=1):
         index = 1
@@ -71,7 +70,7 @@ class Phone(Filed):
                 new_value = "+38" + new_value
                 self._value = new_value
         else:
-            print(f"!!! Entered wrong phone: {new_value}, correct phone: 0674523698")
+            print(f"{chr(9940)} Entered wrong phone: {new_value}, correct phone: 0674523698")
 
 
 class Birthday(Filed):
@@ -85,7 +84,7 @@ class Birthday(Filed):
             new_value = datetime.strptime(birthday, "%d.%m.%Y").date()
             self._value = new_value
         except ValueError:
-            print("ValueError! Enter correct date %dd.%mm.%yyyy")
+            print(f"{chr(9940)} ValueError! Enter correct date %dd.%mm.%yyyy")
 
 
 class Email(Filed):
@@ -99,7 +98,7 @@ class Email(Filed):
         if new_email:
             self._value = email
         else:
-            print(f"!!! You entered wrong email! {new_email}")
+            print(f"{chr(9940)} You entered wrong email! >> {new_email}")
 
 
 class Address(Filed):
@@ -192,7 +191,7 @@ def add_phone(*args, **kwargs: AddressBook):
     else:
         rec = Record(name, phone.value)
     ab.add_record(rec)
-    return f"Contact {name} was created. Phone: {phone}"
+    return f"{chr(9989)} Contact {chr(59259)} {name} was created. {chr(9742)} phone: {phone}"
 
 
 @decor_error
@@ -207,9 +206,9 @@ def change(*args, **kwargs: AddressBook):
     if rec:
         rec.change_phone(phone_old.value, phone_new.value)
         ab.add_record(rec)
-        return f"Contact {name} was change -> old phone: {phone_old} new phone: {phone_new}"
+        return f"{chr(9989)} Contact {chr(59259)} {name} was change -> old phone: {phone_old} new phone: {phone_new}"
     else:
-        return f"Name {name} isn't in the AddressBook"
+        return f"{chr(10006)} Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -221,9 +220,9 @@ def phone(*args, **kwargs: AddressBook):
     rec = ab.get(name.value)
     if rec:
         for value in ab.values():
-            return f'{name}: phone:{value.phones}'
+            return f' {chr(59259)} {name}: {chr(9742)} phone:{value.phones}'
 
-    return f"Name {name} isn't in the AddressBook"
+    return f"{chr(10006)} Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -235,8 +234,8 @@ def delete(*args, **kwargs: AddressBook):
     rec = ab.get(name.value)
     if rec:
         ab.pop(name.value)
-        return f"Contact {name} deleted"
-    return f"Name {name} isn't in the AddressBook"
+        return f"{chr(9989)} Contact {chr(59259)} {name} deleted {chr(9760)}"
+    return f"{chr(10006)} Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -250,8 +249,8 @@ def add_birthday(*args, **kwargs: AddressBook):
     if rec:
         rec.add_birthday(bir_day.value)
         ab.add_record(rec)
-        return f"Contact {name} was add birthday {bir_day}"
-    return f"Name {name} isn't in the AddressBook"
+        return f"{chr(9989)} Contact {chr(59259)} {name} was add {chr(9787)} birthday: {bir_day}"
+    return f"{chr(10006)} Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -265,8 +264,8 @@ def add_email(*args, **kwargs: AddressBook):
     if rec:
         rec.add_email(email.value)
         ab.add_record(rec)
-        return f"Contact {name} was add email {email}"
-    return f"Name {name} isn't in the AddressBook"
+        return f"{chr(9989)} Contact {chr(59259)} {name} was add {chr(9993)} email: {email}"
+    return f"{chr(10006)} Name {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -281,8 +280,8 @@ def add_address(*args, **kwargs: AddressBook):
     if rec:
         rec.add_address(address.value)
         ab.add_record(rec)
-        return f"Contact {name} was add address {address}"
-    return f"Name {name} isn't in the AddressBook"
+        return f"{chr(9989)} Contact {chr(59259)} {name} was add {chr(60042)} address: {address}"
+    return f"{chr(10006)} Name {chr(59259)} {name} isn't in the AddressBook"
 
 
 @decor_error
@@ -296,10 +295,10 @@ def next_birthdays(*args, **kwargs: AddressBook):
         if value.days_to_birthday(value.birthday) <= days:
             bd_list.append(value)
     if not bd_list:
-        return f"No birthdays for the next {days} days"
+        return f"{chr(10006)} No birthdays for the next {days} days"
     for contact in bd_list:
-        print(f"{'-' * 100}\n{contact}")
-    return f"{'-' * 100}\nWho to congratulate on his birthday!!!"
+        print(f"{chr(10027) * 120}\n{contact}")
+    return f"{chr(10789) * 120}\nTo congratulate on his birthday!!!"
 
 
 @decor_error
@@ -329,10 +328,10 @@ def search(*args, **kwargs: AddressBook):
     for contact in ab.values():
         contact = str(contact)
         if s_search.lower() in contact.lower():
-            print(f'{"-" * 100}\n{contact}')
+            print(f'{"-" * 120}\n{contact}')
         if not contact:
             return f"On request <{s_search}> don't found contacts"
-    return f"{'-' * 100}\nOn request <{s_search}> found these contacts"
+    return f"{'-' * 120}\nOn request <{s_search}> found these contacts"
 
 
 def exit_save_change(ab: AddressBook):
@@ -355,7 +354,7 @@ def save_contacts_to_file(contacts):
 
     with open(filename, 'wb') as file:
         pickle.dump(contacts, file)
-        print("Changes saved.")
+        print(f"{chr(9989)} Changes saved.")
 
 
 def open_contacts_from_file():
