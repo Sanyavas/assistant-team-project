@@ -5,6 +5,7 @@ import os
 import shutil
 import re
 import rarfile
+from information import start_info_sf
 
 extensions_img = ['.jpeg', '.png', '.jpg', '.svg']
 extensions_doc = ['.doc', '.docx', '.txt', '.pdf', '.xlsx', '.pptx']
@@ -107,28 +108,28 @@ def count_files(dir_path):
             print(files)
             count += len(files)
 
-    return f'File count: {count}'
+    return f'In folder: {count} files'
 
 
 def main():
     """Main function, which makes a request to enter the path to the directory for sorting"""
 
-    print(f'\n{"~" * 25}\nS O R T I N G   F I L E S\n{"~" * 25}\nExit: 0')
+    print(start_info_sf())
     while True:
         try:
-            root_path = input('Enter the path to the folder to sort: ')
+            root_path = input(f'\nEnter the path to the folder to sort {chr(10151)*3} ')
             if root_path == "0":
                 break
             if root_path[-1] != '/':
                 root_path += '/'
                 sort_dir(root_path, root_path)
-                print('Everything is sorted')
+                print(f'Everything is sorted  {chr(9989)}')
                 print(count_files(root_path))
             else:
-                print("error, try again")
+                print(f"{chr(128679)} error, try again")
 
         except:
-            print('error')
+            print(f'{chr(128679)} error')
 
 
 if __name__ == "__main__":

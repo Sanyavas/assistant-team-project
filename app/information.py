@@ -49,16 +49,27 @@ def help_info_nb(*args, **kwargs):
 def start_info_ab():
     """start info for AddressBook"""
 
-    return f"\n{'~' * 23}" \
-           f"\n A D D R E S S B O O K " \
-           f"\n{'~' * 23}" \
-           f"\nenter: info{chr(128227)}"
+    x = PrettyTable()
+    x.field_names = [" A D D R E S S B O O K "]
+    x.align = 'l'
+    x.add_row([f"enter: info{chr(128227)}"])
+    return x
 
 
 def start_info_nb():
     """start info for NoteBook"""
 
-    return f"\n{'~' * 17}" \
-           f"\n N O T E B O O K " \
-           f"\n{'~' * 17}" \
-           f"\nenter: info{chr(128227)}"
+    x = PrettyTable()
+    x.field_names = [" N O T E B O O K "]
+    x.align = 'l'
+    x.add_row([f"enter: info{chr(128227)}"])
+    return x
+
+
+def start_info_sf():
+
+    x = PrettyTable()
+    x.field_names = [" S O R T I N G   F I L E S "]
+    x.align = 'l'
+    x.add_row([f"Exit: 0"])
+    return x
