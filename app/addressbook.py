@@ -2,11 +2,11 @@
 
 from collections import UserDict
 from datetime import datetime
-from .information import start_info_ab, help_info_ab
+from information import start_info_ab, help_info_ab
 import pickle
 from prettytable import PrettyTable
 from prompt_toolkit import prompt
-from .prompt_tool import Completer, RainbowLexer
+from prompt_tool import Completer, RainbowLexer
 import re
 
 filename = "addressbook.bin"
@@ -292,8 +292,9 @@ def next_birthdays(*args, **kwargs: AddressBook):
     x = PrettyTable()
     for value in ab.values():
         if value.days_to_birthday(value.birthday) <= days:
-            x.field_names = ["name", "phone", "email", "address", "birthday"]
-            x.add_row([value.name, value.phones, value.email, value.address, value.birthday])
+            years = datetime.now().year - value.birthday.year
+            x.field_names = ["name", "birthday", "years", "phone", "email", "address"]
+            x.add_row([value.name, value.birthday, years, value.phones, value.email, value.address])
     if x:
         print(x)
     else:
@@ -319,7 +320,7 @@ def show_all(*args, **kwargs: AddressBook):
 
 
 @decor_error
-def search(*args, **kwargs: AddressBook):
+def find(*args, **kwargs: AddressBook):
     """Search the contents of the contact book by several digits of the phone number or letters of the name, etc"""
 
     ab = kwargs.get('ab')
@@ -345,7 +346,7 @@ def exit_save_change(ab: AddressBook):
             break
         else:
             continue
-    print(f"{chr(128400)}Good bye!")
+    print(f"{chr(128075)} Good bye!")
 
 
 def save_contacts_to_file(contacts):
@@ -378,8 +379,8 @@ COMMANDS = {
     add_birthday: "birth",
     add_email: "email",
     add_address: "address",
-    next_birthdays: "nxbirth",
-    search: "search",
+    next_birthdays: "nextbirth",
+    find: "search",
     help_info_ab: "info",
 }
 
@@ -400,7 +401,7 @@ def main():
     ab = open_contacts_from_file()
 
     while True:
-        user_input = prompt(f"\nEnter command{chr(128073)} ", completer=Completer, lexer=RainbowLexer())
+        user_input = prompt(f"\nEnter command {chr(10151)*3} ", completer=Completer, lexer=RainbowLexer())
         if user_input.lower() in ["close", "exit", "."]:
             exit_save_change(ab)
             break

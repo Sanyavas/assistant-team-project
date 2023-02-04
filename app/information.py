@@ -1,46 +1,49 @@
 """Information output functions"""
 
+from prettytable import PrettyTable
+
 
 def help_info_ab(*args, **kwargs):
     """help info for AddressBook"""
 
-    return f"I N F O:" \
-           f"\n{'~' * 50}" \
-           f"\ncommands:" \
-           f"\n{'~' * 50}" \
-           f"\n>hello<" \
-           f"\n>add<: add name and phone, if there is a name add phone. example:  >command< >name< >phone<" \
-           f"\n>change<: change phone. example:  >command< >name< >old_phone< >new_phone<" \
-           f"\n>show<: show all AddressBook. example:  >command<" \
-           f"\n>phone<: show phone. example:  >command< >name<" \
-           f"\n>del<: del contact. example:  >command< >name<" \
-           f"\n>birth<: add birthday. example:  >command< >name< >date<" \
-           f"\n>email<: add email. example:  >command< >name< >email<" \
-           f"\n>address<: add address. example:  >command< >name< >address<" \
-           f"\n>search<: search by matches. example:  >command< >target<" \
-           f"\n>nxbirt<: next birthday for >n< number of days. example:  >command< >name< >next number days<" \
-           f"\n>info<: information. example:  >command<" \
-           f"\n>., close, exit<: exit. example:  >command<" \
-           f"\n{'~' * 50}" \
-           f"\nContact is created with the phone!"
+    print(f"I N F O:")
+    x = PrettyTable()
+    x.field_names = ['commands', 'description', 'example']
+    x.align = 'l'
+    x.add_row(['>hello<', 'hello', '>command<'])
+    x.add_row(['>add<', 'add name and phone, if there is a name add phone', '>command< >name< >phone<'])
+    x.add_row(['>change<', 'change phone', '>command< >name< >old_phone< >new_phone<'])
+    x.add_row(['>show<', 'show all AddressBook', '>command<'])
+    x.add_row(['>phone<', 'show phone', '>command< >name<'])
+    x.add_row(['>del<', 'del contact', '>command< >name<'])
+    x.add_row(['>birth<', 'add birthday', '>command< >name< >date<'])
+    x.add_row(['>email<', 'add email', '>command< >name< >email<'])
+    x.add_row(['>address<', 'add address', '>command< >name< >address<'])
+    x.add_row(['>find<', 'search by matches', '>command< >target<'])
+    x.add_row(['>nextbirth<', 'next birthday for >n< number of days', '>command< >next number days<'])
+    x.add_row(['>info<', 'information', '>command<'])
+    x.add_row(['>., close, exit<', 'exit', '>command<'])
+    return x
 
 
 def help_info_nb(*args, **kwargs):
     """help info for NoteBook"""
 
-    return f"I N F O:" \
-           f"\n{'~' * 50}" \
-           f"\ncommands:" \
-           f"\n{'~' * 50}" \
-           f"\n>add<: add new note. example:  >command< >title< >tag< >body<" \
-           f"\n>del<: delete note. example:  >command< >note<" \
-           f"\n>change<: change note. example:  >command< >note_old< >note_new<" \
-           f"\n>show<: show all NoteBook. example:  >command<" \
-           f"\n>tag+<: add title. example:  >command< >note< >tag<" \
-           f"\n>find<: find notes. example:  >command< >title< >target<" \
-           f"\n>tags<: find and sort by tegs:  >command< >tag[, tag,tag,...,tag]<" \
-           f"\n>., close, exit<: exit:  >command<" \
-           f"\n{'~' * 50}"
+    print(f"I N F O:")
+    x = PrettyTable()
+    x.field_names = ['commands', 'description', 'example']
+    x.align = 'l'
+    x.add_row(['>hello<', 'hello', '>command<'])
+    x.add_row(['>add<', 'add new note', '>command< >title< >tag< >body<'])
+    x.add_row(['>del<', 'delete note', '>command< >note<'])
+    x.add_row(['>change<', 'change note', '>command< >note_old< >note_new<'])
+    x.add_row(['>show<', 'show all NoteBook', '>command<'])
+    x.add_row(['>tag+<', 'add title', '>command< >note< >tag<'])
+    x.add_row(['>find<', 'find notes', '>command< >title< >target<'])
+    x.add_row(['>tags<', 'find and sort by tags', '>command< >tag[, tag,tag,...,tag]<'])
+    x.add_row(['>info<', 'information', '>command<'])
+    x.add_row(['>., close, exit<', 'exit', '>command<'])
+    return x
 
 
 def start_info_ab():
@@ -49,7 +52,7 @@ def start_info_ab():
     return f"\n{'~' * 23}" \
            f"\n A D D R E S S B O O K " \
            f"\n{'~' * 23}" \
-           f"\nenter: {chr(128227)}info"
+           f"\nenter: info{chr(128227)}"
 
 
 def start_info_nb():
@@ -58,4 +61,4 @@ def start_info_nb():
     return f"\n{'~' * 17}" \
            f"\n N O T E B O O K " \
            f"\n{'~' * 17}" \
-           f"\nenter: info"
+           f"\nenter: info{chr(128227)}"

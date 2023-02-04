@@ -2,8 +2,8 @@
 
 
 from collections import UserDict, UserString
-from .information import start_info_nb, help_info_nb
-from .prompt_tool import Completer, RainbowLexer
+from information import start_info_nb, help_info_nb
+from prompt_tool import Completer, RainbowLexer
 from prompt_toolkit import prompt
 import pickle
 
@@ -151,6 +151,10 @@ def read_from_file(filename) -> NoteBook:
         return NoteBook()
 
 
+def hello(*args, **kwargs: NoteBook):
+    return f"{chr(129299)} How can I help you?\n"
+
+
 @decor_error
 def add_note(*args, **kwargs: NoteBook):
     """Added note in notebook"""
@@ -245,6 +249,7 @@ def exit_save_change(nb: NoteBook):
 """Dictionary with commands(key - function: value - command)"""
 
 COMMANDS = {
+    hello: "hello",
     add_note: "add",
     del_note: "del",
     change_note: "change",
