@@ -36,11 +36,9 @@ def help_info_nb(*args, **kwargs):
     x.add_row(['>hello<', 'hello', '>command<'])
     x.add_row(['>add<', 'add new note', '>command< >title< >tag< >body<'])
     x.add_row(['>del<', 'delete note', '>command< >note<'])
-    x.add_row(['>change<', 'change note', '>command< >note_old< >note_new<'])
     x.add_row(['>show<', 'show all NoteBook', '>command<'])
-    x.add_row(['>tag+<', 'add title', '>command< >note< >tag<'])
+    x.add_row(['>tag<', 'add title', '>command< >note< >tag<'])
     x.add_row(['>find<', 'find notes', '>command< >title< >target<'])
-    x.add_row(['>tags<', 'find and sort by tags', '>command< >tag[, tag,tag,...,tag]<'])
     x.add_row(['>info<', 'information', '>command<'])
     x.add_row(['>., close, exit<', 'exit', '>command<'])
     return x

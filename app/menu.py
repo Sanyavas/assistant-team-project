@@ -26,10 +26,10 @@ def main():
         elif user_input == "3":
             sr_main()
         elif user_input == "0":
-            print("\nGood bay!")
+            print(f"\n{chr(128075)} Good bay!")
             break
         else:
-            print(f"I don't understand you!")
+            print(f"\n{chr(129400)}I don't understand you!")
 
 
 if __name__ == "__main__":
