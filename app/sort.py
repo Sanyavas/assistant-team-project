@@ -5,7 +5,7 @@ import os
 import shutil
 import re
 import rarfile
-from information import start_info_sf
+from .information import start_info_sf
 
 extensions_img = ['.jpeg', '.png', '.jpg', '.svg']
 extensions_doc = ['.doc', '.docx', '.txt', '.pdf', '.xlsx', '.pptx']
@@ -107,8 +107,21 @@ def count_files(dir_path):
         if files != ['.DS_Store']:
             print(files)
             count += len(files)
-
     return f'In folder: {count} files'
+
+
+def sort_again():
+    while True:
+        user_input = input(f"{chr(128221)}You have files to sort? y/n: ")
+        if user_input == "y":
+            main()
+            break
+        elif user_input == "n":
+            break
+        else:
+            print(f"enter y/n")
+
+    print(f"{chr(128075)} Good bye!")
 
 
 def main():
@@ -125,6 +138,8 @@ def main():
                 sort_dir(root_path, root_path)
                 print(f'Everything is sorted  {chr(9989)}')
                 print(count_files(root_path))
+                sort_again()
+                break
             else:
                 print(f"{chr(128679)} error, try again")
 

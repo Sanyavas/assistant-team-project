@@ -1,124 +1,70 @@
 """N O T E B O O K"""
 
-
-from collections import UserDict, UserString
-from information import start_info_nb, help_info_nb
-from prompt_tool import Completer, RainbowLexer
+from collections import UserDict
+from .information import start_info_nb, help_info_nb
+from prettytable import PrettyTable
+from .prompt_tool_nb import Completer, RainbowLexer
 from prompt_toolkit import prompt
 import pickle
-
 
 filename = "notebook.bin"
 
 
-class Tag(UserString):
-    pass
+class NoteBook(UserDict):
+    def add_record(self, record):
+        self.data[record.name.value] = record
+
+    def iterator(self, n=1):
+        index = 1
+        print_block = '-' * 100 + '\n'
+        for record in self.data.values():
+            print_block += str(record) + '\n'
+            if index < n:
+                index += 1
+            else:
+                yield print_block
+                index, print_block = 1, '-' * 100 + '\n'
+        yield print_block
 
 
-class Body(UserString):
-    pass
-
-
-class Title(UserString):
-    pass
-
-
-class Note:
-
-    def __init__(self, title: Title, tag: Tag = None, body: Body = '-'):
-        if len(title) > 0 and title[0].isalnum():
-            self.title = title
-        self.body = body
-        self.tags = []
-        if tag:
-            self.tags.append(tag)
+class Filed:
+    def __init__(self, value):
+        self.value = value
 
     def __repr__(self):
-        return f'Title: {self.title}, Tags: {self.tags}, Body: {self.body}'
-
-    def add_tag(self, tag: Tag):
-        """Added tag in note"""
-
-        if tag not in self.tags:
-            self.tags.append(tag)
-            print(f'tag {tag} added in note {self.note}')
-        return self.tags
+        return f"{self.value}"
 
 
-class NoteBook(UserDict):
+class Name(Filed):
+    pass
 
-    def add_note(self, note: Note):
-        """Added note in notebook"""
 
-        if note.title not in self.data:
-            self.data[note.title] = note
-            return f"Note '{note.title}' was created. {note}"
-        else:
-            return f'{note.title} already exist'
+class Note(Filed):
+    pass
 
-    def del_note(self, note: Note):
-        """Deletes note from notebook"""
 
-        if note.title in self.data:
-            self.data.pop(note.title)
-            return f'Note {note.title} successfully deleted'
-        else:
-            return f'note {note.title} is not in NoteBook'
+class Tag(Filed):
+    pass
 
-    def change_note(self, note_old: Note, note_new: Note):
-        """Replacing on note_old with a note_new in a notebook"""
 
-        if note_old.title in self.data:
-            self.data.pop(note_old.title)
-            self.data[note_new.title] = note_new
-            return f"Note {note_old.title} was change -> new note: {note_new}"
-        else:
-            return f"Note '{note_old.title}' is not in NoteBook"
+class Record:
 
-    def find(self, find_str: str):
-        """Find notes that contain the specified text"""
+    def __init__(self, name, *notes):
+        self.name = name
+        self.notes = list(notes)
+        self.tags = '-'
 
-        str_ret = '\nBy the search key ' + '"' + \
-            find_str + '":' + '\n' + '_' * 40 + '\n'
-        for value in self.data.values():
-            if find_str.lower() in str(value).lower():
-                str_ret += str(value) + '\n'
-        return str_ret
+    def __repr__(self):
+        return f'Title: {self.name}, Notes: {self.notes}, Tags: {self.tags}'
 
-    def find_sort_tags(self, tags):
-        """Search and sort notes by specified tags"""
+    def add_name(self, name):
+        self.name = name
 
-        dict_ret = {}
-        for tag in tags:
-            dict_ret[tag] = []
-            for value in self.data.values():
-                if tag.lower() in value.tags:
-                    dict_ret[tag].append(value)
-        return dict_ret
+    def add_note(self, notes):
+        self.notes.append(notes)
 
-    def save_to_file(self, filename):
-        """Save notes to the file"""
-
-        with open(filename, "wb") as fh:
-            pickle.dump(self, fh)
-            print("Notes saved in file")
-
-    def note_iterator(self, n=2):
-        """Pagination (page-by-page output) for NoteBook"""
-
-        k = 1
-        block = str(k) + '-' * 40
-        string_counter = 0
-        for note in self.data.values():
-            string_counter += 1
-            block += '\n' + str(note)
-            if string_counter == n:
-                k += 1
-                block += '\n' + str(k) + '-' * 40
-                yield block
-                string_counter = 0
-                block = ''
-        yield block
+    def add_tag(self, tags):
+        self.tags = tags
 
 
 def decor_error(func):
@@ -128,47 +74,37 @@ def decor_error(func):
         try:
             return func(*args, **kwargs)
         except IndexError:
-            return "IndexError... Enter the correct numbers of attributes, please"
+            return f"{chr(128679)} IndexError..."
         except KeyError:
-            return "KeyError..."
+            return f"{chr(128679)} KeyError..."
         except ValueError:
-            return "ValueError..."
+            return f"{chr(128679)} ValueError..."
         except AttributeError:
-            return "AttributeError... Enter the correct attribute, please"
+            return f"{chr(128679)} AttributeError..."
+
     return wrapper
 
 
-def read_from_file(filename) -> NoteBook:
-    """Uploading data from a file"""
-
-    try:
-        with open(filename, "rb") as fh:
-            result = pickle.load(fh)
-            print('Read NoteBook from file')
-            return result
-    except FileNotFoundError:
-        print(f'{filename} not exist')
-        return NoteBook()
-
-
+@decor_error
 def hello(*args, **kwargs: NoteBook):
     return f"{chr(129299)} How can I help you?\n"
 
 
-@decor_error
+# @decor_error
 def add_note(*args, **kwargs: NoteBook):
     """Added note in notebook"""
 
     nb = kwargs.get('nb')
-    title = Title(args[0])
-    tag = None
-    body = '-'
-    if len(args) > 1:
-        tag = Tag(args[1])
-    if len(args) > 2:
-        body = ' '.join(args[2:])
-    note = Note(title, tag, body)
-    return nb.add_note(note)
+    name = Name(args[0])
+    notes_row = " ".join(args[1:])
+    notes = Note(notes_row)
+    rec = nb.get(name.value)
+    if rec:
+        rec.add_note(notes.value)
+    else:
+        rec = Record(name, notes.value)
+    nb.add_record(rec)
+    return f"add Name: {name}, note: {notes}"
 
 
 @decor_error
@@ -176,18 +112,12 @@ def del_note(*args, **kwargs: NoteBook):
     """Deletes note from notebook"""
 
     nb = kwargs.get('nb')
-    note = Note(args[0])
-    return nb.del_note(note)
-
-
-@decor_error
-def change_note(*args, **kwargs: NoteBook):
-    """Replacing on note_old with a note_new in a notebook"""
-
-    nb = kwargs.get('nb')
-    note_old = Note(args[0])
-    note_new = Note(args[1])
-    return nb.change_note(note_old, note_new)
+    name = Name(args[0])
+    rec = nb.get(name.value)
+    if rec:
+        nb.pop(name.value)
+        return f"{chr(9989)}Note {name} deleted {chr(10060)} "
+    return f"{chr(10062)} Note {name} isn't in the NoteBook"
 
 
 @decor_error
@@ -195,10 +125,15 @@ def add_tag(*args, **kwargs: NoteBook):
     """Added tag in note"""
 
     nb = kwargs.get('nb')
-    note = nb[args[0]]
-    tag = args[1]
-    print(f'tag {tag} added in note {note}')
-    return note.add_tag(tag)
+    name = Name(args[0])
+    tags_row = ", ".join(args[1:])
+    tags = Tag(tags_row)
+    rec = nb.get(name.value)
+    if rec:
+        rec.add_tag(tags.value)
+    else:
+        return f"{chr(10062)} Note {name} isn't in the NoteBook"
+    return f'In note {name} added tag {tags}'
 
 
 @decor_error
@@ -206,17 +141,14 @@ def find(*args, **kwargs: NoteBook):
     """Find notes that contain the specified text"""
 
     nb = kwargs.get('nb')
-    find_str = args[0]
-    return nb.find(find_str)
-
-
-@decor_error
-def find_sort_tags(*args, **kwargs: NoteBook):
-    """Search and sort notes by specified tags"""
-
-    nb = kwargs.get('nb')
-    tags = list(args)
-    return nb.find_sort_tags(tags)
+    sub = args[0]
+    for value in nb.values():
+        value = str(value)
+        if sub.lower() in value.lower():
+            print(f'{"-" * 80}\n{value}')
+        if not value:
+            return f"{chr(10062)} On request >{sub}< not found in notebook"
+    return f'{"-" * 80}\nOn request >{sub}<, found the following notes'
 
 
 @decor_error
@@ -224,26 +156,48 @@ def show_all(*args, **kwargs: NoteBook):
     """Display the contents of a NoteBook"""
 
     nb = kwargs.get('nb')
-    result = f'Notes list:\n'
-    iter = nb.note_iterator()
-    for item in iter:
-        result += item
-    return result
+    count = 0
+    x = PrettyTable()
+    x.align = 'l'
+    print(f"NoteBook:")
+    for i in nb.values():
+        x.field_names = ['№', 'Names', 'Notes', 'Tags']
+        count += 1
+        x.add_row([count, i.name, ", ".join(i.notes), i.tags])
+    return x
 
 
 def exit_save_change(nb: NoteBook):
     """Request to save information"""
 
     while True:
-        user_input_save = input("Save change? y/n: ")
+        user_input_save = input(f"{chr(128221)}Save change? y/n: ")
         if user_input_save == "y":
-            nb.save_to_file(filename)
+            save_to_file(nb)
             break
         elif user_input_save == "n":
             break
         else:
             continue
-    print("Good bye!")
+    print(f"{chr(128075)} Good bye!")
+
+
+def save_to_file(nb):
+    """Save notes to the file"""
+
+    with open(filename, "wb") as fh:
+        pickle.dump(nb, fh)
+        print(f"{chr(9989)} Notes saved in file")
+
+
+def read_from_file():
+    """Uploading data from a file"""
+
+    try:
+        with open(filename, "rb") as fh:
+            return pickle.load(fh)
+    except FileNotFoundError:
+        return NoteBook()
 
 
 """Dictionary with commands(key - function: value - command)"""
@@ -252,10 +206,8 @@ COMMANDS = {
     hello: "hello",
     add_note: "add",
     del_note: "del",
-    change_note: "change",
-    add_tag: "tag+",
+    add_tag: "tag",
     find: "find",
-    find_sort_tags: "tags",
     show_all: "show",
     help_info_nb: "info"
 }
@@ -274,21 +226,19 @@ def main():
     """Main function"""
 
     print(start_info_nb())
-    nb = read_from_file(filename)
+    nb = read_from_file()
 
     while True:
-        user_input = prompt("Enter command>>>", completer=Completer, lexer=RainbowLexer())
+        user_input = prompt(f"\nEnter command {chr(10151) * 3} ", completer=Completer, lexer=RainbowLexer())
         if user_input:
             if user_input.lower() in ["close", "exit", "."]:
                 exit_save_change(nb)
                 break
             command, data = parser_command(user_input)
             if not command:
-                print("Sorry, I don't understand you!\n")
+                print(f"\nSorry {chr(129400)}, I don't understand you!\n")
             else:
                 print(command(*data, nb=nb))
-        else:
-            print("Sorry, I don't understand you!\nEnter: 'info'\n")
 
 
 if __name__ == "__main__":

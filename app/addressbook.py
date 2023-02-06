@@ -2,11 +2,11 @@
 
 from collections import UserDict
 from datetime import datetime
-from information import start_info_ab, help_info_ab
+from .information import start_info_ab, help_info_ab
 import pickle
 from prettytable import PrettyTable
 from prompt_toolkit import prompt
-from prompt_tool import Completer, RainbowLexer
+from .prompt_tool_ab import Completer, RainbowLexer
 import re
 
 filename = "addressbook.bin"
@@ -220,7 +220,7 @@ def phone(*args, **kwargs: AddressBook):
     rec = ab.get(name.value)
     if rec:
         for value in ab.values():
-            return f'{chr(9989)} {name}: {chr(128222)}phone:{value.phones}'
+            return f'{chr(9989)} {name}: {chr(128222)}phone:{", ".join(value.phones)}'
     return f"{chr(10062)} Name {name} isn't in the AddressBook"
 
 
@@ -290,11 +290,11 @@ def next_birthdays(*args, **kwargs: AddressBook):
     ab = kwargs.get('ab')
     days = int(args[0])
     x = PrettyTable()
-    for value in ab.values():
-        if value.days_to_birthday(value.birthday) <= days:
-            years = datetime.now().year - value.birthday.year
+    for i in ab.values():
+        if i.days_to_birthday(i.birthday) <= days:
+            years = datetime.now().year - i.birthday.year
             x.field_names = ["name", "birthday", "years", "phone", "email", "address"]
-            x.add_row([value.name, value.birthday, years, value.phones, value.email, value.address])
+            x.add_row([i.name, i.birthday, years, ", ".join(i.phones), i.email, i.address])
     if x:
         print(x)
     else:
@@ -308,14 +308,12 @@ def show_all(*args, **kwargs: AddressBook):
 
     x = PrettyTable()
     ab = kwargs.get('ab')
-    # result = f'Contacts list:\n'
-    # print_list = ab.iterator()
-    # for item in print_list:
-    #     result += f"{item}"
+    count = 0
     print(f"\nContacts list:{chr(128214)}")
     for i in ab.values():
-        x.field_names = ["name", "phone", "email", "address", "birthday"]
-        x.add_row([i.name, i.phones, i.email, i.address, i.birthday])
+        x.field_names = ['№', "name", "phone", "email", "address", "birthday"]
+        count += 1
+        x.add_row([count, i.name, ", ".join(i.phones), i.email, i.address, i.birthday])
     return x
 
 
@@ -401,7 +399,7 @@ def main():
     ab = open_contacts_from_file()
 
     while True:
-        user_input = prompt(f"\nEnter command {chr(10151)*3} ", completer=Completer, lexer=RainbowLexer())
+        user_input = prompt(f"\nEnter command {chr(10151) * 3} ", completer=Completer, lexer=RainbowLexer())
         if user_input.lower() in ["close", "exit", "."]:
             exit_save_change(ab)
             break
