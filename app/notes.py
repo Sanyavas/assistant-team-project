@@ -1,9 +1,9 @@
 """N O T E B O O K"""
 
-from collections import UserDict, UserString
-from information import start_info_nb, help_info_nb
+from collections import UserDict
+from .information import start_info_nb, help_info_nb
 from prettytable import PrettyTable
-from prompt_tool_nb import Completer, RainbowLexer
+from .prompt_tool_nb import Completer, RainbowLexer
 from prompt_toolkit import prompt
 import pickle
 
@@ -52,12 +52,12 @@ class Record:
     def __init__(self, name, *notes):
         self.name = name
         self.notes = list(notes)
-        self.tags = "-"
+        self.tags = '-'
 
     def __repr__(self):
         return f'Title: {self.name}, Notes: {self.notes}, Tags: {self.tags}'
 
-    def add_title(self, name):
+    def add_name(self, name):
         self.name = name
 
     def add_note(self, notes):
@@ -90,7 +90,7 @@ def hello(*args, **kwargs: NoteBook):
     return f"{chr(129299)} How can I help you?\n"
 
 
-@decor_error
+# @decor_error
 def add_note(*args, **kwargs: NoteBook):
     """Added note in notebook"""
 
@@ -133,7 +133,7 @@ def add_tag(*args, **kwargs: NoteBook):
         rec.add_tag(tags.value)
     else:
         return f"{chr(10062)} Note {name} isn't in the NoteBook"
-    return f'Tag {tags} added in note {name}'
+    return f'In note {name} added tag {tags}'
 
 
 @decor_error
@@ -147,8 +147,8 @@ def find(*args, **kwargs: NoteBook):
         if sub.lower() in value.lower():
             print(f'{"-" * 80}\n{value}')
         if not value:
-            return f"{chr(10062)} {sub} not in notebook"
-    return f'{"-" * 80}\nOn >{sub}<, found the following notes'
+            return f"{chr(10062)} On request >{sub}< not found in notebook"
+    return f'{"-" * 80}\nOn request >{sub}<, found the following notes'
 
 
 @decor_error
@@ -156,11 +156,14 @@ def show_all(*args, **kwargs: NoteBook):
     """Display the contents of a NoteBook"""
 
     nb = kwargs.get('nb')
+    count = 0
     x = PrettyTable()
     x.align = 'l'
+    print(f"NoteBook:")
     for i in nb.values():
-        x.field_names = ['Names', 'Notes', 'Tags']
-        x.add_row([i.name, "\n".join(i.notes), i.tags])
+        x.field_names = ['№', 'Names', 'Notes', 'Tags']
+        count += 1
+        x.add_row([count, i.name, ", ".join(i.notes), i.tags])
     return x
 
 

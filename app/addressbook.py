@@ -2,11 +2,11 @@
 
 from collections import UserDict
 from datetime import datetime
-from information import start_info_ab, help_info_ab
+from .information import start_info_ab, help_info_ab
 import pickle
 from prettytable import PrettyTable
 from prompt_toolkit import prompt
-from prompt_tool_ab import Completer, RainbowLexer
+from .prompt_tool_ab import Completer, RainbowLexer
 import re
 
 filename = "addressbook.bin"
@@ -308,14 +308,12 @@ def show_all(*args, **kwargs: AddressBook):
 
     x = PrettyTable()
     ab = kwargs.get('ab')
-    # result = f'Contacts list:\n'
-    # print_list = ab.iterator()
-    # for item in print_list:
-    #     result += f"{item}"
+    count = 0
     print(f"\nContacts list:{chr(128214)}")
     for i in ab.values():
-        x.field_names = ["name", "phone", "email", "address", "birthday"]
-        x.add_row([i.name, ", ".join(i.phones), i.email, i.address, i.birthday])
+        x.field_names = ['№', "name", "phone", "email", "address", "birthday"]
+        count += 1
+        x.add_row([count, i.name, ", ".join(i.phones), i.email, i.address, i.birthday])
     return x
 
 
