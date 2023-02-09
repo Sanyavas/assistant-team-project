@@ -2,7 +2,7 @@ from setuptools import setup, find_namespace_packages
 
 
 setup(name='Chatbot_by_IE',
-      version='0.1.9',
+      version='0.1.10',
       description='Chatbot: Addressbook, NoteBook, Sort file',
       url='https://github.com/Sanyavas/chatbot-team-project.git',
       author='Oleksandr Vasylyna, Oleh Vakulchyk, Nataleia Orlovska, Anton Sokhnenko, Polina Dyka',
