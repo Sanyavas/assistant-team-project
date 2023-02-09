@@ -1,13 +1,11 @@
 """N O T E B O O K"""
 
 from collections import UserDict
-from .information import start_info_nb, help_info_nb
+from information import start_info_nb, help_info_nb
 from prettytable import PrettyTable
-from .prompt_tool_nb import Completer, RainbowLexer
+from prompt_tool_nb import Completer, RainbowLexer
 from prompt_toolkit import prompt
 import pickle
-
-filename = "notebook.bin"
 
 
 class NoteBook(UserDict):
@@ -52,7 +50,7 @@ class Record:
     def __init__(self, name, *notes):
         self.name = name
         self.notes = list(notes)
-        self.tags = '-'
+        self.tags = []
 
     def __repr__(self):
         return f'Title: {self.name}, Notes: {self.notes}, Tags: {self.tags}'
@@ -64,7 +62,7 @@ class Record:
         self.notes.append(notes)
 
     def add_tag(self, tags):
-        self.tags = tags
+        self.tags.append(tags)
 
 
 def decor_error(func):
@@ -116,7 +114,7 @@ def del_note(*args, **kwargs: NoteBook):
     rec = nb.get(name.value)
     if rec:
         nb.pop(name.value)
-        return f"{chr(9989)}Note {name} deleted {chr(10060)} "
+        return f"{chr(9989)} Note {name} deleted {chr(10060)} "
     return f"{chr(10062)} Note {name} isn't in the NoteBook"
 
 
@@ -126,7 +124,7 @@ def add_tag(*args, **kwargs: NoteBook):
 
     nb = kwargs.get('nb')
     name = Name(args[0])
-    tags_row = ", ".join(args[1:])
+    tags_row = " ".join(args[1:])
     tags = Tag(tags_row)
     rec = nb.get(name.value)
     if rec:
@@ -163,7 +161,7 @@ def show_all(*args, **kwargs: NoteBook):
     for i in nb.values():
         x.field_names = ['№', 'Names', 'Notes', 'Tags']
         count += 1
-        x.add_row([count, i.name, ", ".join(i.notes), i.tags])
+        x.add_row([count, i.name, ", ".join(i.notes), ", ".join(i.tags)])
     return x
 
 
@@ -211,6 +209,8 @@ COMMANDS = {
     show_all: "show",
     help_info_nb: "info"
 }
+
+filename = "notebook.bin"
 
 
 def parser_command(user_input: str):

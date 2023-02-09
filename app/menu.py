@@ -1,23 +1,16 @@
 """C H A T B O T"""
 
-from .addressbook import main as ab_main
-from .notes import main as nb_main
-from .sort import main as sr_main
-from prettytable import PrettyTable
+from addressbook import main as ab_main
+from notes import main as nb_main
+from sort import main as sr_main
+from information import start_info_menu
 
 
 def main():
     """Main function"""
 
     while True:
-        x = PrettyTable()
-        x.field_names = ['C H A T B O T']
-        x.align = 'l'
-        x.add_row(['0: Exit'])
-        x.add_row(['1: AddressBook'])
-        x.add_row(['2: NoteBook'])
-        x.add_row(['3: Sort files'])
-        print(x)
+        print(start_info_menu())
         user_input = input(f"\nEnter command {chr(10151)*3} ")
         if user_input == "1":
             ab_main()
