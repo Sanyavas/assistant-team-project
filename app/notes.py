@@ -1,11 +1,14 @@
 """N O T E B O O K"""
 
 from collections import UserDict
-from information import start_info_nb, help_info_nb
+from .information import start_info_nb, help_info_nb
 from prettytable import PrettyTable
-from prompt_tool_nb import Completer, RainbowLexer
+from .prompt_tool_nb import Completer, RainbowLexer
 from prompt_toolkit import prompt
 import pickle
+
+
+filename = "notebook.bin"
 
 
 class NoteBook(UserDict):
@@ -34,7 +37,13 @@ class Filed:
 
 
 class Name(Filed):
-    pass
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, new_name):
+        self._value = new_name.capitalize()
 
 
 class Note(Filed):
@@ -46,7 +55,6 @@ class Tag(Filed):
 
 
 class Record:
-
     def __init__(self, name, *notes):
         self.name = name
         self.notes = list(notes)
@@ -88,21 +96,43 @@ def hello(*args, **kwargs: NoteBook):
     return f"{chr(129299)} How can I help you?\n"
 
 
-# @decor_error
+@decor_error
+def add_all_note(*args, **kwargs: NoteBook):
+    """Added note in notebook"""
+
+    nb = kwargs.get('nb')
+    input_name = input(f"Enter name note {chr(10151) * 3} ")
+    name = Name(input_name)
+    rec = nb.get(name.value)
+    if rec:
+        return f"There is already a note with the name '{input_name}' "
+    input_note = input(f"Enter note {chr(10151) * 3} ")
+    input_tags = input(f"Enter tags {chr(10151) * 3} ")
+    notes = Note(input_note)
+    tags = Tag(input_tags)
+
+    rec = Record(name, notes.value)
+    rec.add_tag(tags.value)
+    nb.add_record(rec)
+
+    return f"add Name: '{name}', note: '{notes}', tag: '{tags}'"
+
+
+@decor_error
 def add_note(*args, **kwargs: NoteBook):
     """Added note in notebook"""
 
     nb = kwargs.get('nb')
-    name = Name(args[0])
-    notes_row = " ".join(args[1:])
-    notes = Note(notes_row)
+    input_name = input(f"Enter name note {chr(10151) * 3} ")
+    name = Name(input_name)
     rec = nb.get(name.value)
     if rec:
+        input_note = input(f"Enter note {chr(10151) * 3} ")
+        notes = Note(input_note)
         rec.add_note(notes.value)
     else:
-        rec = Record(name, notes.value)
-    nb.add_record(rec)
-    return f"add Name: {name}, note: {notes}"
+        return f"There is no note with the name '{input_name}' "
+    return f"add Name: '{name}', note: '{notes}'"
 
 
 @decor_error
@@ -110,12 +140,13 @@ def del_note(*args, **kwargs: NoteBook):
     """Deletes note from notebook"""
 
     nb = kwargs.get('nb')
-    name = Name(args[0])
+    input_name = input(f"Enter name note {chr(10151) * 3} ")
+    name = Name(input_name)
     rec = nb.get(name.value)
     if rec:
         nb.pop(name.value)
-        return f"{chr(9989)} Note {name} deleted {chr(10060)} "
-    return f"{chr(10062)} Note {name} isn't in the NoteBook"
+        return f"{chr(9989)} Note '{name}' deleted {chr(10060)} "
+    return f"{chr(10062)} Note '{name}' isn't in the NoteBook"
 
 
 @decor_error
@@ -123,15 +154,16 @@ def add_tag(*args, **kwargs: NoteBook):
     """Added tag in note"""
 
     nb = kwargs.get('nb')
-    name = Name(args[0])
-    tags_row = " ".join(args[1:])
-    tags = Tag(tags_row)
+    input_name = input(f"Enter name note {chr(10151) * 3} ")
+    name = Name(input_name)
     rec = nb.get(name.value)
     if rec:
+        input_tags = input(f"Enter tags {chr(10151) * 3} ")
+        tags = Tag(input_tags)
         rec.add_tag(tags.value)
     else:
-        return f"{chr(10062)} Note {name} isn't in the NoteBook"
-    return f'In note {name} added tag {tags}'
+        return f"{chr(10062)} Note '{name}' isn't in the NoteBook"
+    return f'In note "{name}" added tag "{tags}"'
 
 
 @decor_error
@@ -139,14 +171,14 @@ def find(*args, **kwargs: NoteBook):
     """Find notes that contain the specified text"""
 
     nb = kwargs.get('nb')
-    sub = args[0]
+    sub = input(f"Enter request {chr(10151) * 3} ")
     for value in nb.values():
         value = str(value)
         if sub.lower() in value.lower():
             print(f'{"-" * 80}\n{value}')
         if not value:
-            return f"{chr(10062)} On request >{sub}< not found in notebook"
-    return f'{"-" * 80}\nOn request >{sub}<, found the following notes'
+            return f"{chr(10062)} On request '{sub}' not found in notebook"
+    return f'{"-" * 80}\nOn request "{sub}", found the following notes'
 
 
 @decor_error
@@ -161,7 +193,7 @@ def show_all(*args, **kwargs: NoteBook):
     for i in nb.values():
         x.field_names = ['№', 'Names', 'Notes', 'Tags']
         count += 1
-        x.add_row([count, i.name, ", ".join(i.notes), ", ".join(i.tags)])
+        x.add_row([count, i.name, " ".join(i.notes), " ".join(i.tags)])
     return x
 
 
@@ -202,15 +234,14 @@ def read_from_file():
 
 COMMANDS = {
     hello: "hello",
-    add_note: "add",
+    add_all_note: "add",
+    add_note: "note",
     del_note: "del",
     add_tag: "tag",
     find: "find",
     show_all: "show",
     help_info_nb: "info"
 }
-
-filename = "notebook.bin"
 
 
 def parser_command(user_input: str):

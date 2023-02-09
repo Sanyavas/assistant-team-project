@@ -2,11 +2,11 @@
 
 from collections import UserDict
 from datetime import datetime
-from information import start_info_ab, help_info_ab
+from .information import start_info_ab, help_info_ab
 import pickle
 from prettytable import PrettyTable
 from prompt_toolkit import prompt
-from prompt_tool_ab import Completer, RainbowLexer
+from .prompt_tool_ab import Completer, RainbowLexer
 import re
 
 filename = "addressbook.bin"
