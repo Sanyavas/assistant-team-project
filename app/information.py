@@ -71,3 +71,15 @@ def start_info_sf():
     x.align = 'l'
     x.add_row([f"Exit: 0"])
     return x
+
+
+def start_info_menu():
+
+    x = PrettyTable()
+    x.field_names = ['C H A T B O T']
+    x.align = 'l'
+    x.add_row(['0: Exit'])
+    x.add_row(['1: AddressBook'])
+    x.add_row(['2: NoteBook'])
+    x.add_row(['3: Sort files'])
+    return x

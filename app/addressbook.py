@@ -2,11 +2,11 @@
 
 from collections import UserDict
 from datetime import datetime
-from .information import start_info_ab, help_info_ab
+from information import start_info_ab, help_info_ab
 import pickle
 from prettytable import PrettyTable
 from prompt_toolkit import prompt
-from .prompt_tool_ab import Completer, RainbowLexer
+from prompt_tool_ab import Completer, RainbowLexer
 import re
 
 filename = "addressbook.bin"
@@ -395,6 +395,7 @@ def parser_command(user_input: str):
 
 def main():
     """Main function AddressBook"""
+
     print(start_info_ab())
     ab = open_contacts_from_file()
 
@@ -412,3 +413,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
