@@ -1,15 +1,38 @@
 """A D D R E S S B O O K"""
 
+from abc import abstractmethod, ABCMeta
 from collections import UserDict
 from datetime import datetime
-from .information import start_info_ab, help_info_ab
+from information import start_info_ab, help_info_ab
 import pickle
 from prettytable import PrettyTable
 from prompt_toolkit import prompt
-from .prompt_tool_ab import Completer, RainbowLexer
+from prompt_tool_ab import Completer, RainbowLexer
 import re
 
 filename = "addressbook.bin"
+
+
+class Output(metaclass=ABCMeta):
+    @abstractmethod
+    def show_all(self):
+        pass
+
+
+class AddressBookOutput(Output):
+
+    def show_all(*args, **kwargs):
+        """Displaying the contents of the contact book"""
+
+        x = PrettyTable()
+        ab = kwargs.get('ab')
+        count = 0
+        print(f"\nContacts list:{chr(128214)}")
+        for i in ab.values():
+            x.field_names = ['№', "name", "phone", "email", "address", "birthday"]
+            count += 1
+            x.add_row([count, i.name, ", ".join(i.phones), i.email, i.address, i.birthday])
+        return x
 
 
 class AddressBook(UserDict):
@@ -306,15 +329,8 @@ def next_birthdays(*args, **kwargs: AddressBook):
 def show_all(*args, **kwargs: AddressBook):
     """Displaying the contents of the contact book"""
 
-    x = PrettyTable()
-    ab = kwargs.get('ab')
-    count = 0
-    print(f"\nContacts list:{chr(128214)}")
-    for i in ab.values():
-        x.field_names = ['№', "name", "phone", "email", "address", "birthday"]
-        count += 1
-        x.add_row([count, i.name, ", ".join(i.phones), i.email, i.address, i.birthday])
-    return x
+    new = AddressBookOutput()
+    return new.show_all(*args, **kwargs)
 
 
 @decor_error

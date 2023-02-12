@@ -1,14 +1,37 @@
 """N O T E B O O K"""
 
+from abc import abstractmethod, ABCMeta
 from collections import UserDict
-from .information import start_info_nb, help_info_nb
+from information import start_info_nb, help_info_nb
 from prettytable import PrettyTable
-from .prompt_tool_nb import Completer, RainbowLexer
+from prompt_tool_nb import Completer, RainbowLexer
 from prompt_toolkit import prompt
 import pickle
 
 
 filename = "notebook.bin"
+
+
+class Output(metaclass=ABCMeta):
+    @abstractmethod
+    def show_all(self):
+        pass
+
+
+class NoteBookOutput(Output):
+    def show_all(*args, **kwargs):
+        """Display the contents of a NoteBook"""
+
+        nb = kwargs.get('nb')
+        count = 0
+        x = PrettyTable()
+        x.align = 'l'
+        print(f"NoteBook:")
+        for i in nb.values():
+            x.field_names = ['№', 'Names', 'Notes', 'Tags']
+            count += 1
+            x.add_row([count, i.name, " ".join(i.notes), " ".join(i.tags)])
+        return x
 
 
 class NoteBook(UserDict):
@@ -185,16 +208,8 @@ def find(*args, **kwargs: NoteBook):
 def show_all(*args, **kwargs: NoteBook):
     """Display the contents of a NoteBook"""
 
-    nb = kwargs.get('nb')
-    count = 0
-    x = PrettyTable()
-    x.align = 'l'
-    print(f"NoteBook:")
-    for i in nb.values():
-        x.field_names = ['№', 'Names', 'Notes', 'Tags']
-        count += 1
-        x.add_row([count, i.name, " ".join(i.notes), " ".join(i.tags)])
-    return x
+    new = NoteBookOutput()
+    return new.show_all(*args, **kwargs)
 
 
 def exit_save_change(nb: NoteBook):
