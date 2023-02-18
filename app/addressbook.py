@@ -9,7 +9,7 @@ from prompt_toolkit import prompt
 from prompt_tool_ab import Completer, RainbowLexer
 import re
 
-filename = "addressbook.bin"
+filename = "data/addressbook.bin"
 
 
 class AddressBook(UserDict):

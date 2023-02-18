@@ -8,7 +8,7 @@ from prompt_toolkit import prompt
 import pickle
 
 
-filename = "notebook.bin"
+filename = "data/notebook.bin"
 
 
 class NoteBook(UserDict):
