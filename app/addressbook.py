@@ -2,14 +2,17 @@
 
 from collections import UserDict
 from datetime import datetime
-from information import start_info_ab, help_info_ab
-from output import AddressBookOutput
+from .information import start_info_ab, help_info_ab
+from .output import AddressBookOutput
 import pickle
 from prompt_toolkit import prompt
-from prompt_tool_ab import Completer, RainbowLexer
+from .prompt_tool_ab import Completer, RainbowLexer
 import re
+from .logger import get_logger
+
 
 filename = "data/addressbook.bin"
+logger = get_logger(__name__)
 
 
 class AddressBook(UserDict):
@@ -334,7 +337,7 @@ def save_contacts_to_file(contacts):
 
     with open(filename, 'wb') as file:
         pickle.dump(contacts, file)
-        print(f"{chr(9989)} Changes saved.")
+        logger.info(f"Changes saved.")
 
 
 def open_contacts_from_file():
@@ -378,12 +381,13 @@ def parser_command(user_input: str):
 def main():
     """Main function AddressBook"""
 
+    logger.info('Start Addressbook')
     print(start_info_ab())
     ab = open_contacts_from_file()
 
     while True:
         user_input = prompt(f"\nEnter command {chr(10151) * 3} ", completer=Completer, lexer=RainbowLexer())
-        if user_input.lower() in ["close", "exit", "."]:
+        if user_input.lower() in ["close", "exit", ".", "0"]:
             exit_save_change(ab)
             break
         command, data = parser_command(user_input)

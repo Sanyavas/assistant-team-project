@@ -1,6 +1,8 @@
 from abc import abstractmethod, ABCMeta
 from datetime import datetime
-from prettytable import PrettyTable
+from prettytable.colortable import ColorTable, Themes
+
+# from prettytable import PrettyTable
 
 
 class Output(metaclass=ABCMeta):
@@ -18,7 +20,7 @@ class AddressBookOutput(Output):
     def show_all(*args, **kwargs):
         """Displaying the contents of the contact book"""
 
-        x = PrettyTable()
+        x = ColorTable(theme=Themes.OCEAN)
         ab = kwargs.get('ab')
         count = 0
         print(f"\nContacts list:{chr(128214)}")
@@ -33,7 +35,7 @@ class AddressBookOutput(Output):
 
         ab = kwargs.get('ab')
         days = int(args[0])
-        x = PrettyTable()
+        x = ColorTable(theme=Themes.OCEAN)
         for i in ab.values():
             if i.days_to_birthday(i.birthday) <= days:
                 years = datetime.now().year - i.birthday.year
@@ -52,7 +54,7 @@ class NoteBookOutput(Output):
 
         nb = kwargs.get('nb')
         count = 0
-        x = PrettyTable()
+        x = ColorTable(theme=Themes.OCEAN)
         x.align = 'l'
         print(f"NoteBook:")
         for i in nb.values():

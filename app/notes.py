@@ -1,14 +1,16 @@
 """N O T E B O O K"""
 
 from collections import UserDict
-from information import start_info_nb, help_info_nb
-from output import NoteBookOutput
-from prompt_tool_nb import Completer, RainbowLexer
+from .information import start_info_nb, help_info_nb
+from .output import NoteBookOutput
+from .prompt_tool_nb import Completer, RainbowLexer
 from prompt_toolkit import prompt
 import pickle
+from .logger import get_logger
 
 
 filename = "data/notebook.bin"
+logger = get_logger(__name__)
 
 
 class NoteBook(UserDict):
@@ -209,7 +211,7 @@ def save_to_file(nb):
 
     with open(filename, "wb") as fh:
         pickle.dump(nb, fh)
-        print(f"{chr(9989)} Notes saved in file")
+        logger.info(f"Changes saved.")
 
 
 def read_from_file():
@@ -248,13 +250,14 @@ def parser_command(user_input: str):
 def main():
     """Main function"""
 
+    logger.info('Start Notebook')
     print(start_info_nb())
     nb = read_from_file()
 
     while True:
         user_input = prompt(f"\nEnter command {chr(10151) * 3} ", completer=Completer, lexer=RainbowLexer())
         if user_input:
-            if user_input.lower() in ["close", "exit", "."]:
+            if user_input.lower() in ["close", "exit", ".", "0"]:
                 exit_save_change(nb)
                 break
             command, data = parser_command(user_input)
