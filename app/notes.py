@@ -1,12 +1,12 @@
 """N O T E B O O K"""
 
 from collections import UserDict
-from information import start_info_nb, help_info_nb
-from output import NoteBookOutput
-from prompt_tool_nb import Completer, RainbowLexer
+from .information import start_info_nb, help_info_nb
+from .output import NoteBookOutput
+from .prompt_tool_nb import Completer, RainbowLexer
 from prompt_toolkit import prompt
 import pickle
-from logger import get_logger
+from .logger import get_logger
 
 
 filename = "data/notebook.bin"

@@ -1,3 +1,5 @@
+"""S E T U P"""
+
 from setuptools import setup, find_namespace_packages
 
 with open("README.md", "r") as fh:
@@ -15,7 +17,7 @@ setup(name='Chatbot_by_IE',
             "License :: OSI Approved :: MIT License",
             "Operating System :: OS Independent"],
       long_description=long_description,
-      # data_files=[('app/data', ['app/data/application.logs'])],
+      # data_files=[('app\\data', ['app\\data\\application.logs'])],
       # include_package_data=True,
       packages=find_namespace_packages(),
       install_requires=["prompt_toolkit", "rarfile", "prettytable", "rich"],

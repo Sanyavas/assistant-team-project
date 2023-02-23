@@ -1,4 +1,4 @@
-"""Information output functions"""
+"""I N F O R M A T I O N"""
 
 from prettytable.colortable import ColorTable, Themes
 # from prettytable import PrettyTable

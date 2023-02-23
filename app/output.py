@@ -1,3 +1,5 @@
+"""A B S T R A C T   C L A S S E S"""
+
 from abc import abstractmethod, ABCMeta
 from datetime import datetime
 from prettytable.colortable import ColorTable, Themes

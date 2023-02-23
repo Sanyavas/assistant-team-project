@@ -1,3 +1,5 @@
+"""P R O M P T    F O R   A D D R E S S B O O K"""
+
 from prompt_toolkit.lexers import Lexer
 from prompt_toolkit.styles.named_colors import NAMED_COLORS
 from prompt_toolkit.completion import NestedCompleter

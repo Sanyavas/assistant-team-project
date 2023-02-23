@@ -1,3 +1,5 @@
+"""H A N G M A N"""
+
 from random import choice
 from rich.console import Console
 

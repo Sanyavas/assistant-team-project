@@ -1,11 +1,11 @@
 """C H A T B O T    M E N U"""
 
-from addressbook import main as ab_main
-from notes import main as nb_main
-from sort import main as sr_main
-from information import start_info_menu
-from games_menu import main as games_main
-from logger import get_logger
+from .addressbook import main as ab_main
+from .notes import main as nb_main
+from .sort import main as sr_main
+from .information import start_info_menu
+from .games_menu import main as games_main
+from .logger import get_logger
 
 
 logger = get_logger(__name__)
