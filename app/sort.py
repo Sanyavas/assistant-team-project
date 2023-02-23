@@ -5,8 +5,8 @@ import os
 import shutil
 import re
 import rarfile
-from .information import start_info_sf
-from .logger import get_logger
+from information import start_info_sf
+from logger import get_logger
 
 logger = get_logger(__name__)
 

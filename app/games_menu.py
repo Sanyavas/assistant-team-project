@@ -1,7 +1,7 @@
-from .information import start_info_games
-from .games.magic_layer import main as mg_main
-from .games.hangman import main as hm_main
-from .logger import get_logger
+from information import start_info_games
+from games.magic_layer import main as mg_main
+from games.hangman import main as hm_main
+from logger import get_logger
 
 
 logger = get_logger(__name__)

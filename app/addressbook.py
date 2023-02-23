@@ -2,13 +2,13 @@
 
 from collections import UserDict
 from datetime import datetime
-from .information import start_info_ab, help_info_ab
-from .output import AddressBookOutput
+from information import start_info_ab, help_info_ab
+from output import AddressBookOutput
 import pickle
 from prompt_toolkit import prompt
-from .prompt_tool_ab import Completer, RainbowLexer
+from prompt_tool_ab import Completer, RainbowLexer
 import re
-from .logger import get_logger
+from logger import get_logger
 
 
 filename = "data/addressbook.bin"

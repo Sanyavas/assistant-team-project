@@ -15,7 +15,12 @@ pip install Chatbot-by-IE
 * AddressBook
 * NoteBook
 * Sort files
+* Games
 
+
+## Command to start from Terminal
+
+### /> chatbot
 
 
 ## License

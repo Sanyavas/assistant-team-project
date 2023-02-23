@@ -78,7 +78,7 @@ def game_again():
         answer = input(f"{chr(10151) * 3} ")
         if answer == 'ні' or answer == "0":
             console.print("Бувай!\n[yellow]Слава Україні![/yellow]\n")
-            return False
+            break
         elif answer == 'так' or answer == "1":
             return main()
         else:
@@ -96,8 +96,10 @@ def main():
     console.print(f'\n[green]Ви маєте {attempt} спроб вгадати слово {display_hangman(attempt)}[/green]')
     print(f'Слово з {len(word)} літер: {word_completion}')
 
-    while True:
-        print(f'\nВведіть літеру або слово')
+    while True or attempt < 1:
+        print(count_letter)
+        print(attempt)
+        print(f'Введіть літеру або слово')
         user_in = input(f"{chr(10151) * 3} ").upper()
         if not user_in.isalpha():  # перевірка чи не цифра
             console.print(f"[red]Мають бути лише літери![/red]")
@@ -130,19 +132,14 @@ def main():
                     print(f'Ви маєте {attempt} спроб вгадати слово\n')
 
         if user_in == word or count_letter == len(word):  # Перемога
-            console.print(f'\n[yellow]Вітаю! Ви вгадали слово:[/yellow]  [green]{word}[/green]')
-            if game_again():
-                continue
-            else:
-                break
+            console.print(f'\n[yellow]Вітаю! {chr(127881)} Ви вгадали слово:[/yellow]  [green]{word}[/green]')
+            game_again()
+            break
 
         if attempt == 0:  # Поразка
-            console.print(f'[red]Ви програли :(  {display_hangman(attempt)} слово було -[/red] [blue]{word}[/blue]')
-            if game_again():
-                continue
-            else:
-                break
-    return True
+            console.print(f'[red]Ви програли :(  {display_hangman(attempt)} слово було:[/red] [blue]{word}[/blue]')
+            game_again()
+            break
 
 
 # функція поточного стану шибиниці
