@@ -11,7 +11,7 @@ import re
 from .logger import get_logger
 
 
-filename = "data/addressbook.bin"
+filename = "addressbook.bin"
 logger = get_logger(__name__)
 
 

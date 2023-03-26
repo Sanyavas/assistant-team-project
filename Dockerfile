@@ -10,4 +10,4 @@ RUN pip install -r requirements.txt
 
 ENTRYPOINT ["python", "app/menu.py"]
 
-VOLUME ./data:/data
+#VOLUME ./data:/data

@@ -9,7 +9,7 @@ import pickle
 from .logger import get_logger
 
 
-filename = "data/notebook.bin"
+filename = "notebook.bin"
 logger = get_logger(__name__)
 
 

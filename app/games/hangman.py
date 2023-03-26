@@ -99,8 +99,6 @@ def main():
     print(f'Слово з {len(word)} літер: {word_completion}')
 
     while True or attempt < 1:
-        print(count_letter)
-        print(attempt)
         print(f'Введіть літеру або слово')
         user_in = input(f"{chr(10151) * 3} ").upper()
         if not user_in.isalpha():  # перевірка чи не цифра
