@@ -1,9 +1,14 @@
-"""C H A T B O T"""
+"""C H A T B O T    M E N U"""
 
-from addressbook import main as ab_main
-from notes import main as nb_main
-from sort import main as sr_main
-from information import start_info_menu
+from .addressbook import main as ab_main
+from .notes import main as nb_main
+from .sort import main as sr_main
+from .information import start_info_menu
+from .games_menu import main as games_main
+from .logger import get_logger
+
+
+logger = get_logger(__name__)
 
 
 def main():
@@ -18,6 +23,8 @@ def main():
             nb_main()
         elif user_input == "3":
             sr_main()
+        elif user_input == "4":
+            games_main()
         elif user_input == "0":
             print(f"\n{chr(128075)} Good bay!")
             break
@@ -26,4 +33,5 @@ def main():
 
 
 if __name__ == "__main__":
+    logger.info('Start program')
     main()

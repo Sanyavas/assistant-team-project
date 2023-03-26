@@ -1,3 +1,5 @@
+"""P R O M P T    F O R   N O T E B O O K"""
+
 from prompt_toolkit.lexers import Lexer
 from prompt_toolkit.styles.named_colors import NAMED_COLORS
 from prompt_toolkit.completion import NestedCompleter
@@ -19,4 +21,4 @@ class RainbowLexer(Lexer):
 Completer = NestedCompleter.from_nested_dict({'hello': None, 'exit': None, 'close': None,
                                               'add': None, '.': None, 'show': None,
                                               'del': None, 'find': None, 'tag': None,
-                                              'info': None, 'note': None})
+                                              'info': None, 'note': None, '0': None})

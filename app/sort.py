@@ -1,11 +1,14 @@
 """S O R T   F I L E"""
 
-
 import os
 import shutil
 import re
 import rarfile
-from information import start_info_sf
+from .information import start_info_sf
+from .logger import get_logger
+
+logger = get_logger(__name__)
+
 
 extensions_img = ['.jpeg', '.png', '.jpg', '.svg']
 extensions_doc = ['.doc', '.docx', '.txt', '.pdf', '.xlsx', '.pptx']
@@ -127,10 +130,12 @@ def sort_again():
 def main():
     """Main function, which makes a request to enter the path to the directory for sorting"""
 
+    logger.info("Start Sort file")
     print(start_info_sf())
     while True:
         try:
-            root_path = input(f'\nEnter the path to the folder to sort {chr(10151)*3} ')
+            root_path = input(f'\nEnter path to folder{chr(10151)*3} ')
+            logger.info(f'path to folder {root_path}')
             if root_path == "0":
                 break
             if root_path[-1] != '/':
