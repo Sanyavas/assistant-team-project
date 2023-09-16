@@ -1,4 +1,4 @@
-# CHATBOT
+# ASSISTANT
 ___
 Chatbot іs a personal assistant.
 
